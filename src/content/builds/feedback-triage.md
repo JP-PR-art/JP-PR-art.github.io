@@ -26,6 +26,9 @@ file-discovery for spec manifests and a needs-info verdict class for genuinely a
 The next gate is a pre-registered held-out wave; the pipeline does not touch live tickets until
 it passes.
 
+![Diagram: Wave 0 on historical items failed the pre-set accuracy gate, root cause analysis produced two fixes (spec-manifest file discovery and a needs-info verdict class), both feeding Wave 1, a held-out pre-registered wave, which faces a go/no-go gate before the pipeline is allowed to touch live tickets](/images/builds/feedback-triage-flow.svg)
+<span class="fig-caption">Wave 0 failed its gate on purpose; Wave 1 is the pre-registered rematch before any live ticket is touched</span>
+
 ## Measured results
 
 - Three evaluation waves run to date; the go/no-go gate is a written pre-registration, not vibes
