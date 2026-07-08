@@ -11,7 +11,7 @@ const { Content } = await render(build);
 const fields = [
   { label: 'Published', value: build.data.date.toISOString().slice(0, 10) },
   { label: 'Stack', value: build.data.stack.join(' · ') },
-  { label: 'Status', value: 'Shipped', status: true },
+  { label: 'Status', value: build.data.status, status: true },
 ];
 ---
 <Base title={`${build.data.title}, JP Perez`} description={build.data.summary}>

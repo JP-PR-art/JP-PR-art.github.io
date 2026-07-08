@@ -9,6 +9,7 @@ const builds = defineCollection({
     date: z.coerce.date(),
     stack: z.array(z.string()),
     featured: z.boolean().default(false),
+    status: z.string().default('Shipped'),
   }),
 });
 
