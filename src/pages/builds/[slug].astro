@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+export async function getStaticPaths() {
+  const builds = await getCollection('builds');
+  return builds.map((b) => ({ params: { slug: b.id }, props: { build: b } }));
+}
+const { build } = Astro.props;
+const { Content } = await render(build);
+---
+<Base title={`${build.data.title}, JP Perez`} description={build.data.summary}>
+  <h1>{build.data.title}</h1>
+  <p class="meta">{build.data.date.toISOString().slice(0, 10)} · {build.data.stack.join(' · ')}</p>
+  <Content />
+</Base>

@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+const builds = (await getCollection('builds'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<Base title="Builds, JP Perez" description="Working AI systems I designed, shipped and operated: agents, sales ops, delivery portals, evaluation pipelines.">
+  <h1>Builds</h1>
+  <p>Working systems, not tutorials. Each case study covers the problem, the architecture, measured results, and what I would do next.</p>
+  {builds.map((b) => (
+    <div class="card">
+      <h3><a href={`/builds/${b.id}`}>{b.data.title}</a></h3>
+      <p class="meta">{b.data.date.toISOString().slice(0, 10)}</p>
+      <p>{b.data.summary}</p>
+      <p>{b.data.stack.map((s) => <span class="tag">{s}</span>)}</p>
+    </div>
+  ))}
+</Base>
