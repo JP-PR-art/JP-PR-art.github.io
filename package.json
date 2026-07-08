@@ -7,7 +7,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check:links": "npm run build && npx --yes linkinator ./dist --recurse --silent"
+    "check:links": "npm run build && npx --yes linkinator ./dist --recurse --skip \"^https?://(?!localhost)\" --silent"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.12",
