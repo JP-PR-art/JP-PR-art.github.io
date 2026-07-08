@@ -4,16 +4,26 @@ import { getCollection } from 'astro:content';
 const builds = (await getCollection('builds'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
-<Base title="Builds, JP Perez" description="Working AI systems I designed, shipped and operated: agents, sales ops, delivery portals, evaluation pipelines.">
+<Base title="Builds, JP Perez" description="Working AI systems I designed, shipped and operated: agents, sales ops, delivery portals, evaluation pipelines." wide>
   <p class="eyebrow">Case studies</p>
   <h1>Builds</h1>
   <p>Working systems, not tutorials. Each case study covers the problem, the architecture, measured results, and what I would do next.</p>
-  {builds.map((b) => (
-    <div class="card">
-      <h3><a href={`/builds/${b.id}`}>{b.data.title}</a></h3>
-      <p class="meta">{b.data.date.toISOString().slice(0, 10)}</p>
-      <p>{b.data.summary}</p>
-      <p>{b.data.stack.map((s) => <span class="tag">{s}</span>)}</p>
-    </div>
-  ))}
+  <div class="build-grid">
+    {builds.map((b) => (
+      <a class="build-tile" href={`/builds/${b.id}`}>
+        {b.data.cover ? (
+          <div class="build-tile__frame">
+            <img src={b.data.cover} alt={`${b.data.title} workflow`} loading="lazy" />
+          </div>
+        ) : (
+          <div class="build-tile__frame build-tile__frame--plate">
+            <span>{b.data.stack.join(' + ')}</span>
+          </div>
+        )}
+        <p class="build-tile__meta">{b.data.date.toISOString().slice(0, 10)} · {b.data.status}</p>
+        <h3 class="build-tile__title">{b.data.title}</h3>
+        <p class="build-tile__summary">{b.data.summary}</p>
+      </a>
+    ))}
+  </div>
 </Base>

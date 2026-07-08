@@ -3,6 +3,7 @@ title: Replacing a crane-rental company's Excel weekplanning
 summary: A clickable planner for a small Belgian crane-rental business, replacing an Excel plus printed-A4 workflow that drifted out of sync.
 date: 2026-06-10
 stack: ["Next.js", "Postgres", "Drizzle ORM", "SheetJS"]
+cover: /images/builds/werf-planner-light.png
 featured: false
 status: In build
 ---

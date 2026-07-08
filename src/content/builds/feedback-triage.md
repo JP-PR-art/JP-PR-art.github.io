@@ -3,6 +3,7 @@ title: Bug-vs-change triage with pre-registered evaluations
 summary: An LLM pipeline that classifies client feedback against contract scope, evaluated in blind waves before any live use.
 date: 2026-07-07
 stack: ["Claude", "Evals", "Jira"]
+cover: /images/builds/feedback-triage-flow.svg
 featured: false
 ---
 

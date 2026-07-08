@@ -10,6 +10,7 @@ const builds = defineCollection({
     stack: z.array(z.string()),
     featured: z.boolean().default(false),
     status: z.string().default('Shipped'),
+    cover: z.string().optional(),
   }),
 });
 

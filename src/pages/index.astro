@@ -30,13 +30,23 @@ const vitals = [
 
   <h2>Featured builds</h2>
   {builds.length === 0 && <p class="meta">Case studies landing shortly.</p>}
-  {builds.map((b) => (
-    <div class="card">
-      <h3><a href={`/builds/${b.id}`}>{b.data.title}</a></h3>
-      <p>{b.data.summary}</p>
-      <p>{b.data.stack.map((s) => <span class="tag">{s}</span>)}</p>
-    </div>
-  ))}
+  <div class="build-grid">
+    {builds.map((b) => (
+      <a class="build-tile" href={`/builds/${b.id}`}>
+        {b.data.cover ? (
+          <div class="build-tile__frame">
+            <img src={b.data.cover} alt={`${b.data.title} workflow`} loading="lazy" />
+          </div>
+        ) : (
+          <div class="build-tile__frame build-tile__frame--plate">
+            <span>{b.data.stack.join(' + ')}</span>
+          </div>
+        )}
+        <p class="build-tile__meta">{b.data.stack.slice(0, 3).join(' · ')}</p>
+        <h3 class="build-tile__title">{b.data.title}</h3>
+      </a>
+    ))}
+  </div>
 
   <h2>Recent notes</h2>
   {notes.length === 0 && <p class="meta">First notes coming soon.</p>}

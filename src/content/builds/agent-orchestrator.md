@@ -3,6 +3,7 @@ title: Multi-agent dev pipeline with human approval gates
 summary: A planner, coder, tester and reviewer agent pipeline on the Claude Agent SDK, with restart-safe human-in-the-loop approval.
 date: 2026-07-07
 stack: ["Claude Agent SDK", "TypeScript", "Fastify"]
+cover: /images/builds/agent-orchestrator-flow.svg
 featured: true
 ---
 

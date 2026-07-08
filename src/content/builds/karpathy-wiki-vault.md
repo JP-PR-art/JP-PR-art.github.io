@@ -3,6 +3,7 @@ title: A personal wiki that only grows from finished work
 summary: An Obsidian vault run on Andrej Karpathy's concept-organized wiki pattern, with a custom Claude Code command that harvests wiki articles from shipped projects, never drafts them directly.
 date: 2026-07-07
 stack: ["Obsidian", "Claude Code", "Markdown"]
+cover: /images/builds/vault-pipeline-flow.svg
 featured: false
 ---
 

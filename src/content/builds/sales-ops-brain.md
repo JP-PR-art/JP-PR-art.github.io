@@ -3,6 +3,7 @@ title: An agentic sales ops system where the issue tracker is the CRM
 summary: Cron-driven AI agents sourcing prospects, classifying replies and drafting outreach on top of Jira, run in production for weeks.
 date: 2026-07-01
 stack: ["Claude", "Jira API", "Cron agents", "MCP connectors"]
+cover: /images/builds/sales-ops-brain-flow.svg
 featured: true
 ---
 
