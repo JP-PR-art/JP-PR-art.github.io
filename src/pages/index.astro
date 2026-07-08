@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import TitleBlock from '../components/TitleBlock.astro';
 import { getCollection } from 'astro:content';
 const builds = (await getCollection('builds'))
   .filter((b) => b.data.featured)
@@ -8,16 +9,24 @@ const builds = (await getCollection('builds'))
 const notes = (await getCollection('notes'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
+const vitals = [
+  { label: 'Based', value: 'Antwerp, Belgium', sub: 'ES · FR · EN · NL' },
+  { label: 'Closed', value: '€600K+' },
+  { label: 'Status', value: 'Open to work', status: true },
+];
 ---
 <Base title="JP Perez, technical-commercial hybrid" description="Account Executive and Product Owner who ships working AI systems. Solutions consulting, CPQ, agentic workflows.">
-  <h1>I sell complex software, own its delivery, and build working AI systems.</h1>
-  <p>
-    I am an Account Executive and Product Owner at a CPQ and 3D-configurator software vendor in Antwerp.
-    I run the full technical sales cycle, closed more than €600K, and turn signed contracts into shipped
-    solutions. Along the way I started building the tools I wished existed: multi-agent pipelines,
-    an AI-driven sales ops system, and a client delivery portal running in production.
-  </p>
-  <p class="meta">Spanish C2 · French C1 · English C1 · Dutch B2 · based in Antwerp, Belgium</p>
+  <div class="hero">
+    <p class="eyebrow">Account Executive · Product Owner · AI builder</p>
+    <h1>I sell complex software, own its delivery, and build working AI systems.</h1>
+    <p class="lede">
+      I am an Account Executive and Product Owner at a CPQ and 3D-configurator software vendor in Antwerp.
+      I run the full technical sales cycle, closed more than €600K, and turn signed contracts into shipped
+      solutions. Along the way I started building the tools I wished existed: multi-agent pipelines,
+      an AI-driven sales ops system, and a client delivery portal running in production.
+    </p>
+    <TitleBlock fields={vitals} />
+  </div>
 
   <h2>Featured builds</h2>
   {builds.length === 0 && <p class="meta">Case studies landing shortly.</p>}
@@ -31,9 +40,15 @@ const notes = (await getCollection('notes'))
 
   <h2>Recent notes</h2>
   {notes.length === 0 && <p class="meta">First notes coming soon.</p>}
-  <ul>
+  <ul class="note-index">
     {notes.map((n) => (
-      <li><a href={`/notes/${n.id}`}>{n.data.title}</a> <span class="meta">{n.data.date.toISOString().slice(0, 10)}</span></li>
+      <li>
+        <div class="note-index-row">
+          <a href={`/notes/${n.id}`}>{n.data.title}</a>
+          <span class="spacer"></span>
+          <span class="date">{n.data.date.toISOString().slice(0, 10)}</span>
+        </div>
+      </li>
     ))}
   </ul>
 

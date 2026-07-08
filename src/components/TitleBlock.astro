@@ -1,0 +1,14 @@
+---
+interface Field { label: string; value: string; sub?: string; status?: boolean }
+interface Props { fields: Field[] }
+const { fields } = Astro.props;
+---
+<div class="title-block">
+  {fields.map((f) => (
+    <div class="title-block__field">
+      <span class="title-block__label">{f.label}</span>
+      <span class:list={['title-block__value', { 'title-block__value--status': f.status }]}>{f.value}</span>
+      {f.sub && <span class="title-block__sub">{f.sub}</span>}
+    </div>
+  ))}
+</div>

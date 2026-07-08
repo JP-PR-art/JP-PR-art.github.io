@@ -21,9 +21,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <body>
     <header class="site-header">
       <a class="brand" href="/">JP Perez</a>
-      <a href="/builds">Builds</a>
-      <a href="/notes">Notes</a>
-      <a href="/about">About</a>
+      <nav>
+        <a href="/builds">Builds</a>
+        <a href="/notes">Notes</a>
+        <a href="/about">About</a>
+      </nav>
     </header>
     <main><slot /></main>
     <footer class="site-footer">

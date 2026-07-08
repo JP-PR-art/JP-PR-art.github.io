@@ -5,6 +5,7 @@ const builds = (await getCollection('builds'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 <Base title="Builds, JP Perez" description="Working AI systems I designed, shipped and operated: agents, sales ops, delivery portals, evaluation pipelines.">
+  <p class="eyebrow">Case studies</p>
   <h1>Builds</h1>
   <p>Working systems, not tutorials. Each case study covers the problem, the architecture, measured results, and what I would do next.</p>
   {builds.map((b) => (

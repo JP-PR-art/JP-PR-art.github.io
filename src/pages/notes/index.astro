@@ -5,12 +5,16 @@ const notes = (await getCollection('notes'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 <Base title="Notes, JP Perez" description="Short notes on agentic workflows, MCP, CPQ and selling technical software.">
+  <p class="eyebrow">Field notes</p>
   <h1>Notes</h1>
-  <ul>
+  <ul class="note-index">
     {notes.map((n) => (
       <li>
-        <a href={`/notes/${n.id}`}>{n.data.title}</a>
-        <span class="meta"> · {n.data.date.toISOString().slice(0, 10)}</span>
+        <div class="note-index-row">
+          <a href={`/notes/${n.id}`}>{n.data.title}</a>
+          <span class="spacer"></span>
+          <span class="date">{n.data.date.toISOString().slice(0, 10)}</span>
+        </div>
         <p class="meta">{n.data.summary}</p>
       </li>
     ))}

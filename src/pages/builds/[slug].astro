@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import TitleBlock from '../../components/TitleBlock.astro';
 import { getCollection, render } from 'astro:content';
 export async function getStaticPaths() {
   const builds = await getCollection('builds');
@@ -7,9 +8,16 @@ export async function getStaticPaths() {
 }
 const { build } = Astro.props;
 const { Content } = await render(build);
+const fields = [
+  { label: 'Published', value: build.data.date.toISOString().slice(0, 10) },
+  { label: 'Stack', value: build.data.stack.join(' · ') },
+  { label: 'Status', value: 'Shipped', status: true },
+];
 ---
 <Base title={`${build.data.title}, JP Perez`} description={build.data.summary}>
   <h1>{build.data.title}</h1>
-  <p class="meta">{build.data.date.toISOString().slice(0, 10)} · {build.data.stack.join(' · ')}</p>
-  <Content />
+  <TitleBlock fields={fields} />
+  <div class="build-body">
+    <Content />
+  </div>
 </Base>
