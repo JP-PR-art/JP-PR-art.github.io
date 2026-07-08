@@ -1,0 +1,36 @@
+---
+import '../styles/global.css';
+interface Props { title: string; description: string }
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title="JP Perez, notes" href="/rss.xml" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/">JP Perez</a>
+      <a href="/builds">Builds</a>
+      <a href="/notes">Notes</a>
+      <a href="/about">About</a>
+    </header>
+    <main><slot /></main>
+    <footer class="site-footer">
+      <span>© 2026 Juan Pablo Perez</span>
+      <a href="mailto:juanepa1pr@gmail.com">Email</a>
+      <a href="https://www.linkedin.com/in/juanpapr">LinkedIn</a>
+      <a href={`https://github.com/JP-PR-art`}>GitHub</a>
+    </footer>
+  </body>
+</html>
