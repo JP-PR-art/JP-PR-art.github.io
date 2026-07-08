@@ -24,6 +24,9 @@ Each agent runs with its own system prompt and toolset; the orchestrator owns st
 step is restart-safe: pending approvals persist to disk, so killing and restarting the server does
 not lose or double-run work. A demo script drives the whole loop end to end with a single command.
 
+![Flow diagram: planner agent drafts a plan, a human approval gate either approves it forward to the coder agent or sends changes requested back to the planner, then coder to tester to reviewer to shipped](/images/builds/agent-orchestrator-flow.svg)
+<span class="fig-caption">Planner → human approval gate → coder → tester → reviewer → shipped</span>
+
 ## Measured results
 
 - 12 automated tests covering the pipeline and the restart-safe approval path

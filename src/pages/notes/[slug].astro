@@ -8,7 +8,7 @@ export async function getStaticPaths() {
 const { note } = Astro.props;
 const { Content } = await render(note);
 ---
-<Base title={`${note.data.title}, JP Perez`} description={note.data.summary}>
+<Base title={`${note.data.title}, JP Perez`} description={note.data.summary} accent="notes">
   <h1>{note.data.title}</h1>
   <p class="status-line">{note.data.date.toISOString().slice(0, 10)}</p>
   <div class="notes-body">
