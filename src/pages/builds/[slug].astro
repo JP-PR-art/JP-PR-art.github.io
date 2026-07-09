@@ -14,7 +14,7 @@ const fields = [
   { label: 'Status', value: build.data.status, status: true },
 ];
 ---
-<Base title={`${build.data.title}, JP Perez`} description={build.data.summary}>
+<Base title={`${build.data.title}, JP Perez`} description={build.data.summary} image={`/images/og/og-${build.id}.png`}>
   <h1>{build.data.title}</h1>
   <TitleBlock fields={fields} />
   <div class="build-body">
