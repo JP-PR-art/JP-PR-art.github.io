@@ -3,6 +3,7 @@ title: Client delivery portal in production
 summary: A Next.js portal where clients submit requests, an LLM classifies them, and admins sign off, deployed on Vercel with Postgres.
 date: 2026-07-07
 stack: ["Next.js", "Neon Postgres", "Vercel", "Claude API"]
+cover: /images/builds/client-portal.png
 featured: true
 ---
 
@@ -22,6 +23,9 @@ request classification, an admin sign-off inbox, and scheduled status-sync jobs.
 Migrations run at build time (idempotent, unpooled connection for DDL), an admin account
 bootstraps from an environment variable, and cron endpoints are protected by bearer tokens.
 Classifier failures are logged and fall back to a needs-review state instead of guessing.
+
+![Client-facing request feed: a bug classified in scope with no charge, a change request classified as new scope and quoted separately, and a work order pending sign-off](/images/builds/client-portal.png)
+<span class="fig-caption">Anonymized reference: real UI and classification logic, placeholder client and request data</span>
 
 ## Measured results
 
