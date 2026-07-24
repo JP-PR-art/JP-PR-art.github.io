@@ -438,7 +438,78 @@
     padding: 0.35rem 0.7rem;
   }
 
+  /* ---- client delivery ---- */
+  .clients {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(1rem, 2.5vw, 1.6rem);
+  }
+  .client-card {
+    border: 1px solid var(--line-strong);
+    border-radius: 14px;
+    background: var(--surface);
+    padding: clamp(1.4rem, 2.6vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    transition: border-color 0.25s ease, transform 0.35s cubic-bezier(0.2,0.6,0.2,1);
+  }
+  .client-card:hover { border-color: var(--line-strong); transform: translateY(-3px); }
+  .client-card .case-kicker { margin-bottom: 0; }
+  .client-card h3 {
+    font-family: var(--display);
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.12;
+  }
+  .client-card p { color: var(--ink-2); font-size: 0.97rem; }
+  .client-role {
+    font: 500 0.72rem/1.35 var(--mono);
+    letter-spacing: 0.02em;
+    color: var(--ink-3);
+    margin-top: -0.15rem;
+  }
+  .client-role strong { color: var(--ink-2); font-weight: 600; }
+  .client-card .tags { margin-top: auto; padding-top: 0.45rem; }
+
+  .venture {
+    margin-top: clamp(1rem, 2.5vw, 1.6rem);
+    border: 1px dashed var(--line-strong);
+    border-radius: 14px;
+    padding: clamp(1.4rem, 2.6vw, 2rem);
+    display: grid;
+    gap: 0.85rem;
+  }
+  .venture-head { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; }
+  .venture .badge {
+    font: 500 0.66rem/1 var(--mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 0.3rem 0.62rem;
+  }
+  .venture h3 {
+    font-family: var(--display);
+    font-size: clamp(1.3rem, 2.2vw, 1.65rem);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+  .venture p { color: var(--ink-2); font-size: 0.97rem; max-width: 72ch; }
+  .venture .venture-link {
+    font: 500 0.8rem/1 var(--mono);
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    width: max-content;
+    padding-bottom: 2px;
+  }
+  .venture .venture-link:hover { border-bottom-color: var(--accent); }
+
   @media (max-width: 820px) {
+    .clients { grid-template-columns: 1fr; }
     .case { grid-template-columns: 1fr; gap: 1rem; }
     .case-num { font-size: 2.2rem; }
     .case-grid, .case.rev .case-grid { grid-template-columns: 1fr; }
@@ -896,6 +967,7 @@
     <a class="brand" href="#top"><span class="b-long">Juan Pablo Perez</span><span class="b-short">JP Perez</span><span class="dot">.</span></a>
     <nav class="site-nav" aria-label="Primary">
       <a href="#work">Work</a>
+      <a href="#clients">Clients</a>
       <a href="#profile">Profile</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -1177,6 +1249,69 @@
         </div>
       </article>
 
+    </div>
+  </section>
+
+  <!-- CLIENT DELIVERY -->
+  <section class="section" id="clients" aria-labelledby="clients-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">Client delivery</p>
+          <h2 id="clients-title" style="margin-top:1rem">What I've delivered for clients.</h2>
+        </div>
+        <p>Manufacturers of technical products, taken from first spec to production. On each I carried the product-owner and client-facing role through to delivery. Client names withheld, the work speaks for itself.</p>
+      </div>
+
+      <div class="clients">
+        <!-- Yard -->
+        <article class="client-card reveal">
+          <span class="case-kicker">3D configure-price-quote</span>
+          <h3>A 3D configurator for made-to-order garden buildings</h3>
+          <p class="client-role"><strong>Product owner &amp; client-facing</strong>, from scope to delivery</p>
+          <p>For a manufacturer of custom outdoor structures, I own the delivery side of their 3D configure-price-quote product, where a customer designs a building, doors, windows, glass walls and fencing, and gets a priced quote. I reproduce and triage reported issues, run the weekly test cycle with their team, and keep the pricing and quoting logic correct so every configured item lands in the total and on the report. I sit between their commercial side and the developers, turning vague reports into clear, testable work.</p>
+          <div class="tags"><span class="tag">Product owner</span><span class="tag">QA &amp; delivery</span><span class="tag">3D configurator</span><span class="tag">Pricing logic</span></div>
+        </article>
+
+        <!-- AF Systems -->
+        <article class="client-card reveal">
+          <span class="case-kicker">Field app / compliance</span>
+          <h3>A field-to-office app for certified fire-stopping</h3>
+          <p class="client-role"><strong>Product owner &amp; client-facing</strong>, from scope to delivery</p>
+          <p>For a passive fire-protection manufacturer, I helped shape and deliver the web and mobile app their installers use on site: mapping fire-stop seals onto building floor plans, selecting the right certified product for each penetration, and generating the regulatory plan exports (PDF and DXF) and declarations a job needs to pass inspection. Scope ran from discovery to production, across desktop and mobile.</p>
+          <div class="tags"><span class="tag">Solution design</span><span class="tag">Mobile + web</span><span class="tag">Plan export (PDF/DXF)</span><span class="tag">Product selector</span></div>
+        </article>
+
+        <!-- CELO -->
+        <article class="client-card reveal">
+          <span class="case-kicker">3D configurator / structural calc</span>
+          <h3>A support-systems configurator with the engineering built in</h3>
+          <p class="client-role"><strong>Product owner &amp; client-facing</strong>, from scope to delivery</p>
+          <p>For a manufacturer of modular mounting and support systems, I worked on a 3D configurator where an engineer assembles a support from strut, clamps, anchors and profiles, and the tool checks it: applying loads, validating the connections, and producing a structural report backed by a calculation engine. It turns a catalogue of parts into a guided, verifiable design instead of a lookup exercise.</p>
+          <div class="tags"><span class="tag">3D configurator</span><span class="tag">Structural calculation</span><span class="tag">Reports</span><span class="tag">Product data</span></div>
+        </article>
+
+        <!-- IndexFix -->
+        <article class="client-card reveal">
+          <span class="case-kicker">Engineering software / platform</span>
+          <h3>A Eurocode anchor-design platform, calculation to licensing</h3>
+          <p class="client-role"><strong>Product owner &amp; client-facing</strong>, from scope to delivery</p>
+          <p>For a structural-fixings manufacturer, I delivered an anchor-design platform that turns dense Eurocode rules into a guided tool: an engineer sizes threaded rods and anchors, checks tension, flexure and torsion, and exports the report and DWG. I also stood up the surrounding platform, user licensing, internal-versus-external accounts, registration and the production rollout, so it runs as a real product rather than a prototype.</p>
+          <div class="tags"><span class="tag">Eurocode calculation</span><span class="tag">DWG / XML export</span><span class="tag">Licensing &amp; users</span><span class="tag">Production rollout</span></div>
+        </article>
+      </div>
+
+      <!-- Venture / side project -->
+      <div class="venture reveal">
+        <div class="venture-head">
+          <span class="case-kicker" style="margin-bottom:0">Side project</span>
+          <span class="badge">In progress &middot; not launched yet</span>
+        </div>
+        <h3>A bilingual walking-tour business, designed end to end</h3>
+        <p>A venture I'm building on the side, not yet launched: a bilingual (EN/ES) site for an Antwerp walking-tour idea, with an immersive scroll-driven homepage, three tour products and a five-minute booking flow. Designed and built end to end as a working draft.</p>
+        <a class="venture-link" href="https://juanenamberes.vercel.app" target="_blank" rel="noopener">View the draft &rarr;</a>
+        <div class="tags"><span class="tag">Astro</span><span class="tag">Bilingual (EN/ES)</span><span class="tag">Product &amp; design</span></div>
+      </div>
     </div>
   </section>
 
