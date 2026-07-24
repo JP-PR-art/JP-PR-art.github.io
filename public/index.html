@@ -508,8 +508,84 @@
   }
   .venture .venture-link:hover { border-bottom-color: var(--accent); }
 
+  /* ---- venture embed (live browser frame) ---- */
+  .venture-embed {
+    display: grid;
+    grid-template-columns: 0.82fr 1.18fr;
+    gap: clamp(1.4rem, 3vw, 2.6rem);
+    align-items: center;
+  }
+  .venture-copy { display: grid; gap: 1rem; align-content: center; }
+  .venture-copy .badge {
+    justify-self: start;
+    font: 500 0.66rem/1 var(--mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 0.32rem 0.64rem;
+  }
+  .venture-copy p { color: var(--ink-2); font-size: 1rem; }
+  .venture-link {
+    font: 500 0.82rem/1 var(--mono);
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    width: max-content;
+    padding-bottom: 2px;
+  }
+  .venture-link:hover { border-bottom-color: var(--accent); }
+  .browser {
+    margin: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: 0 24px 60px -34px rgba(0,0,0,0.55);
+  }
+  .browser__bar {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-2);
+  }
+  .browser__dots { display: inline-flex; gap: 0.35rem; }
+  .browser__dots i { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--line-strong); }
+  .browser__url {
+    font: 500 0.72rem/1 var(--mono);
+    color: var(--ink-3);
+    flex: 1;
+    text-align: center;
+    letter-spacing: 0.02em;
+  }
+  .browser__live {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font: 500 0.62rem/1 var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .browser__live::before {
+    content: ""; width: 0.45rem; height: 0.45rem; border-radius: 50%;
+    background: var(--accent);
+  }
+  .browser__viewport {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background: #0a1622;
+  }
+  .browser__viewport iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: 0;
+    display: block;
+  }
+
   @media (max-width: 820px) {
     .clients { grid-template-columns: 1fr; }
+    .venture-embed { grid-template-columns: 1fr; }
+    .browser__viewport { aspect-ratio: 4 / 3; }
     .case { grid-template-columns: 1fr; gap: 1rem; }
     .case-num { font-size: 2.2rem; }
     .case-grid, .case.rev .case-grid { grid-template-columns: 1fr; }
@@ -1301,16 +1377,37 @@
         </article>
       </div>
 
-      <!-- Venture / side project -->
-      <div class="venture reveal">
-        <div class="venture-head">
-          <span class="case-kicker" style="margin-bottom:0">Side project</span>
-          <span class="badge">In progress &middot; not launched yet</span>
+    </div>
+  </section>
+
+  <!-- VENTURE: WALKING TOURS (live embed) -->
+  <section class="section" id="venture" aria-labelledby="venture-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">Side project</p>
+          <h2 id="venture-title" style="margin-top:1rem">A walking-tour business, built end to end.</h2>
         </div>
-        <h3>A bilingual walking-tour business, designed end to end</h3>
-        <p>A venture I'm building on the side, not yet launched: a bilingual (EN/ES) site for an Antwerp walking-tour idea, with an immersive scroll-driven homepage, three tour products and a five-minute booking flow. Designed and built end to end as a working draft.</p>
-        <a class="venture-link" href="https://juanenamberes.vercel.app" target="_blank" rel="noopener">View the draft &rarr;</a>
-        <div class="tags"><span class="tag">Astro</span><span class="tag">Bilingual (EN/ES)</span><span class="tag">Product &amp; design</span></div>
+        <p>A venture I'm building on the side, not launched yet. Designed, built and deployed solo: product, design and code.</p>
+      </div>
+
+      <div class="venture-embed reveal">
+        <div class="venture-copy">
+          <span class="badge">In progress &middot; not launched yet</span>
+          <p>A bilingual (EN/ES) site for an Antwerp walking-tour idea: a live WebGL globe that flies you from orbit down to Antwerp, one 2.5-hour route from Central Station to the Scheldt, three tour products and a five-minute booking flow. The panel on the right is the real site, running live.</p>
+          <a class="venture-link" href="https://juanenamberes.vercel.app" target="_blank" rel="noopener">Open the live draft &rarr;</a>
+          <div class="tags"><span class="tag">Astro</span><span class="tag">WebGL globe</span><span class="tag">Bilingual (EN/ES)</span><span class="tag">Product &amp; design</span></div>
+        </div>
+        <figure class="browser">
+          <div class="browser__bar">
+            <span class="browser__dots"><i></i><i></i><i></i></span>
+            <span class="browser__url">juanenamberes.vercel.app</span>
+            <span class="browser__live">Live</span>
+          </div>
+          <div class="browser__viewport">
+            <iframe src="https://juanenamberes.vercel.app" title="Juan en Amberes, live walking-tours site" loading="lazy" referrerpolicy="no-referrer"></iframe>
+          </div>
+        </figure>
       </div>
     </div>
   </section>
