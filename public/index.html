@@ -679,18 +679,9 @@
   }
   .d-log b { color: var(--accent); font-weight: 600; }
 
-  .d-input {
-    flex: 1; min-width: 0; border: 1px solid var(--line-strong); border-radius: 7px; background: var(--bg);
-    padding: 0.55rem 0.7rem; font: 500 0.86rem/1.3 var(--sans); color: var(--ink);
-  }
-  .d-input:focus { outline: none; border-color: var(--accent); }
-
   .d-panel { border: 1px solid var(--line); border-radius: 9px; background: var(--bg-2); padding: 0.8rem; margin-top: 0.6rem; }
   .d-panel h5 { margin: 0 0 0.4rem; font: 600 0.68rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
   .d-quote { font-size: 0.86rem; color: var(--ink-2); line-height: 1.5; }
-
-  .wbar { height: 6px; background: var(--line); border-radius: 20px; overflow: hidden; margin: 0.55rem 0; }
-  .wbar > i { display: block; height: 100%; background: #2f9e5f; border-radius: 20px; }
 
   /* pipeline */
   .pipe { display: flex; flex-direction: column; }
@@ -753,25 +744,6 @@
   .wtoast { font: 600 0.72rem/1 var(--mono); color: #2f7a4d; }
   [data-theme="dark"] .wtoast { color: #6fca8f; }
 
-  /* vault harvest pipeline */
-  .vcount { display: flex; gap: 0.4rem 1.2rem; flex-wrap: wrap; font: 600 0.72rem/1.4 var(--mono); color: var(--ink-3); margin-bottom: 0.9rem; }
-  .vcount b { color: var(--accent); }
-  .vault { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 0.9rem; align-items: start; }
-  .vcol h5 { margin: 0 0 0.5rem; font: 600 0.64rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
-  .vproj { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); padding: 0.6rem 0.7rem; }
-  .vproj + .vproj { margin-top: 0.5rem; }
-  .vproj__top { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-  .vproj__name { font-size: 0.85rem; font-weight: 600; }
-  .vproj__act { margin-left: auto; display: flex; gap: 0.4rem; }
-  .vproj__err { font: 500 0.71rem/1.4 var(--mono); color: #b23a2e; margin-top: 0.45rem; }
-  [data-theme="dark"] .vproj__err { color: #e88a7d; }
-  .vproj__done { font: 500 0.71rem/1.4 var(--mono); color: #2f7a4d; margin-top: 0.45rem; }
-  [data-theme="dark"] .vproj__done { color: #6fca8f; }
-  .vproj.harvested { opacity: 0.66; }
-  .vwiki { border-left: 2px solid var(--accent); background: var(--bg-2); border-radius: 0 7px 7px 0; padding: 0.5rem 0.6rem; font: 600 0.8rem/1.3 var(--sans); color: var(--ink); }
-  .vwiki + .vwiki { margin-top: 0.45rem; }
-  .vwiki.fresh { border-left-color: #2f9e5f; }
-  @media (max-width: 620px) { .vault { grid-template-columns: 1fr; } }
 
   /* ---- approach / how i work ---- */
   .approach-grid {
@@ -1057,15 +1029,15 @@
 </style>
 </head>
 <body>
-<a class="skip" href="#work">Skip to work</a>
+<a class="skip" href="#clients">Skip to work</a>
 <div class="scroll-progress" aria-hidden="true"><i></i></div>
 
 <header class="site-header" id="top">
   <div class="wrap header-inner">
     <a class="brand" href="#top"><span class="b-long">Juan Pablo Perez</span><span class="b-short">JP Perez</span><span class="dot">.</span></a>
     <nav class="site-nav" aria-label="Primary">
-      <a href="#work">Work</a>
       <a href="#clients">Clients</a>
+      <a href="#work">Work</a>
       <a href="#profile">Profile</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -1093,7 +1065,7 @@
         enthusiasm.
       </p>
       <div class="hero-cta hero-stagger d4">
-        <a class="btn btn-primary" href="#work">View case studies <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        <a class="btn btn-primary" href="#clients">View case studies <span class="arrow" aria-hidden="true">&rarr;</span></a>
         <a class="btn btn-ghost" href="#contact">Contact</a>
       </div>
       <dl class="hero-rail hero-stagger d5">
@@ -1102,251 +1074,6 @@
         <div><dt>Languages</dt><dd>ES FR EN NL</dd></div>
         <div><dt>Base</dt><dd>Antwerp</dd></div>
       </dl>
-    </div>
-  </section>
-
-  <!-- WORK -->
-  <section class="section" id="work" aria-labelledby="work-title">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <div>
-          <p class="eyebrow">Selected work</p>
-          <h2 id="work-title" style="margin-top:1rem">Systems I designed, shipped, and operated.</h2>
-        </div>
-        <p>Six working systems, not tutorials. Each covers the problem, my role, the approach, and a small prototype you can click.</p>
-      </div>
-
-      <!-- 01 -->
-      <article class="case reveal">
-        <div class="case-num">01</div>
-        <div class="case-body">
-          <div class="case-lead">
-            <span class="case-kicker">Internal tooling / sales operations</span>
-            <h3>An agentic sales-ops system where the issue tracker is the CRM</h3>
-          </div>
-          <div class="case-grid">
-            <dl class="spec">
-              <div><dt>Context</dt><dd>CPQ software vendor, internal build</dd></div>
-              <div><dt>Role</dt><dd>Product owner and sole builder</dd></div>
-              <div><dt>Stack</dt><dd>Claude, Jira API, MCP, cron agents</dd></div>
-            </dl>
-            <div class="narrative">
-              <div class="blk"><h4>Challenge</h4><p>The pipeline lived in scattered notes and inboxes. Sourcing, reply triage, and follow-up were manual, and nothing an agent did would be auditable enough to trust.</p></div>
-              <div class="blk"><h4>Approach</h4><p>I made the issue tracker the source of truth and ran cron-driven agents on top of it: a daily prospect sourcer, a reply classifier reading live email over MCP, and a drafting agent, each writing behind a human approval gate with full audit logging and ICP-based prioritization.</p></div>
-              <div class="blk outcome"><h4>Outcome</h4><p>Ran in production for weeks. Daily sourcing and reply classification automated, every write logged, nothing sent to a real person without a human in the loop.</p></div>
-              <div class="tags"><span class="tag">Claude</span><span class="tag">Jira API</span><span class="tag">MCP connectors</span><span class="tag">Cron agents</span></div>
-            </div>
-          </div>
-          <div class="demo" id="d1">
-            <div class="demo__bar"><span class="demo__dots"><i></i><i></i><i></i></span><span class="demo__title">sales-ops board</span><span class="demo__tag">Mock data &middot; try it</span></div>
-            <div class="demo__body">
-              <div class="d-row" style="margin-bottom:0.85rem">
-                <button class="d-btn" id="d1-source">Run daily sourcer</button>
-                <span class="demo__hint" style="margin:0">Sources a suspect, grades it, drafts stay behind a human gate.</span>
-              </div>
-              <div id="d1-list"></div>
-              <div class="d-log" id="d1-log"></div>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- 02 -->
-      <article class="case rev reveal">
-        <div class="case-num">02</div>
-        <div class="case-body">
-          <div class="case-lead">
-            <span class="case-kicker">Client-facing product / production</span>
-            <h3>A client delivery portal running in production</h3>
-          </div>
-          <div class="case-grid">
-            <div class="narrative">
-              <div class="blk"><h4>Challenge</h4><p>Client requests arrived by email and in meetings, got re-typed into trackers, and no one could see status, or whether a request was even in contract scope.</p></div>
-              <div class="blk"><h4>Approach</h4><p>A portal that captures requests at the source, classifies each as a bug or new scope against the contract with an LLM, and routes it to an admin sign-off inbox. Migrations run at build, cron endpoints are token-protected, and classifier failures fall back to a needs-review state instead of guessing.</p></div>
-              <div class="blk outcome"><h4>Outcome</h4><p>Live in production, with automated checks green at deploy and security verified before launch: dev routes closed, endpoints authenticated, and a stored-XSS vector found in review and fixed.</p></div>
-              <div class="tags"><span class="tag">Next.js</span><span class="tag">Neon Postgres</span><span class="tag">Vercel</span><span class="tag">Claude API</span></div>
-            </div>
-            <dl class="spec">
-              <div><dt>Context</dt><dd>Client delivery platform</dd></div>
-              <div><dt>Role</dt><dd>Designed, built, shipped</dd></div>
-              <div><dt>Stack</dt><dd>Next.js, Postgres, Vercel</dd></div>
-            </dl>
-          </div>
-          <div class="demo" id="d2">
-            <div class="demo__bar"><span class="demo__dots"><i></i><i></i><i></i></span><span class="demo__title">client-a.portal</span><span class="demo__tag">Mock data &middot; try it</span></div>
-            <div class="demo__body">
-              <div class="d-row" style="margin-bottom:0.85rem">
-                <input class="d-input" id="d2-input" placeholder="Describe a client request, e.g. &quot;export button is broken&quot;" aria-label="Describe a client request">
-                <button class="d-btn" id="d2-submit">Submit</button>
-              </div>
-              <div id="d2-list"></div>
-              <div class="d-panel">
-                <div class="d-card__top"><span class="d-card__title">WO-07 &middot; Configurator rollout</span><span class="d-card__id" id="d2-wopct">64%</span></div>
-                <div class="wbar"><i id="d2-wobar" style="width:64%"></i></div>
-                <div class="d-row"><button class="d-btn ghost sm" id="d2-signoff">Sign off work order</button></div>
-              </div>
-              <p class="demo__hint">Each request is auto-classified as a bug (in scope) or a change (new scope) against the contract.</p>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- 03 -->
-      <article class="case reveal">
-        <div class="case-num">03</div>
-        <div class="case-body">
-          <div class="case-lead">
-            <span class="case-kicker">Method / agent engineering</span>
-            <h3>A multi-agent delivery pipeline with a human approval gate</h3>
-          </div>
-          <div class="case-grid">
-            <dl class="spec">
-              <div><dt>Context</dt><dd>Hands-on R&amp;D</dd></div>
-              <div><dt>Role</dt><dd>Designed and built</dd></div>
-              <div><dt>Stack</dt><dd>Claude Agent SDK, TypeScript</dd></div>
-            </dl>
-            <div class="narrative">
-              <div class="blk"><h4>Challenge</h4><p>Most agentic coding stops at "the model wrote something." Real delivery needs a plan, a build, tests, a review, and a human decision before anything ships.</p></div>
-              <div class="blk"><h4>Approach</h4><p>Four specialized agents (planner, coder, tester, reviewer) behind one API, with a restart-safe approval gate between plan and execution. Pending approvals persist to disk, so killing and restarting the server never loses or double-runs work.</p></div>
-              <div class="blk outcome"><h4>Outcome</h4><p>A one-command demo reproducible from a clean clone, the whole pipeline and approval path exercised end to end, and a codebase hardened after its own review.</p></div>
-              <div class="tags"><span class="tag">Claude Agent SDK</span><span class="tag">TypeScript</span><span class="tag">Fastify</span></div>
-            </div>
-          </div>
-          <div class="demo" id="d3">
-            <div class="demo__bar"><span class="demo__dots"><i></i><i></i><i></i></span><span class="demo__title">agent-pipeline</span><span class="demo__tag">Mock data &middot; try it</span></div>
-            <div class="demo__body">
-              <div class="pipe" id="d3-pipe">
-                <div class="pipe__node" data-node="0"><span class="pipe__conn"></span><span class="pipe__ico">P</span><span><span class="pipe__lbl">Planner</span><br><span class="pipe__sub">drafts the plan</span></span></div>
-                <div class="pipe__node gate" data-node="1"><span class="pipe__conn"></span><span class="pipe__ico">!</span><span><span class="pipe__lbl">Human approval gate</span><br><span class="pipe__sub">restart-safe</span></span></div>
-                <div class="pipe__node" data-node="2"><span class="pipe__conn"></span><span class="pipe__ico">C</span><span><span class="pipe__lbl">Coder</span><br><span class="pipe__sub">implements</span></span></div>
-                <div class="pipe__node" data-node="3"><span class="pipe__conn"></span><span class="pipe__ico">T</span><span><span class="pipe__lbl">Tester</span><br><span class="pipe__sub">runs the suite</span></span></div>
-                <div class="pipe__node" data-node="4"><span class="pipe__conn"></span><span class="pipe__ico">R</span><span><span class="pipe__lbl">Reviewer</span><br><span class="pipe__sub">checks the diff</span></span></div>
-                <div class="pipe__node" data-node="5"><span class="pipe__ico">&#10003;</span><span><span class="pipe__lbl">Shipped</span><br><span class="pipe__sub">done</span></span></div>
-              </div>
-              <div class="d-row" id="d3-controls" style="margin-top:0.9rem"></div>
-              <p class="demo__hint" id="d3-status">Idle. Run the loop, then decide at the gate.</p>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- 04 -->
-      <article class="case rev reveal">
-        <div class="case-num">04</div>
-        <div class="case-body">
-          <div class="case-lead">
-            <span class="case-kicker">LLM reliability / delivery</span>
-            <h3>Bug-vs-change triage, proven before it was trusted</h3>
-          </div>
-          <div class="case-grid">
-            <div class="narrative">
-              <div class="blk"><h4>Challenge</h4><p>Deciding whether client feedback is a bug (covered) or new scope (billable) is high-stakes and easy to get wrong. I would not put an LLM on that call without proof.</p></div>
-              <div class="blk"><h4>Approach</h4><p>Blind, pre-registered evaluation waves. A first wave with known outcomes exposed the failure modes; I root-caused them, added fixes and a "needs more info" verdict class, then ran a held-out, pre-registered second wave behind a go/no-go gate.</p></div>
-              <div class="blk outcome"><h4>Outcome</h4><p>Failure modes caught before any live use. The system only advances on held-out performance, never on the strength of a good demo.</p></div>
-              <div class="tags"><span class="tag">Claude</span><span class="tag">Evaluation design</span><span class="tag">Jira</span></div>
-            </div>
-            <dl class="spec">
-              <div><dt>Context</dt><dd>Delivery and contract scope</dd></div>
-              <div><dt>Role</dt><dd>Designed the evaluation method</dd></div>
-              <div><dt>Domain</dt><dd>LLM reliability</dd></div>
-            </dl>
-          </div>
-          <div class="demo" id="d4">
-            <div class="demo__bar"><span class="demo__dots"><i></i><i></i><i></i></span><span class="demo__title">eval-harness</span><span class="demo__tag">Mock data &middot; try it</span></div>
-            <div class="demo__body">
-              <div class="d-tablewrap">
-                <table class="d-table" id="d4-table">
-                  <thead><tr><th>Feedback item</th><th>Predicted</th><th>Actual</th><th>Result</th></tr></thead>
-                  <tbody id="d4-body"></tbody>
-                </table>
-              </div>
-              <div class="d-score" id="d4-score" hidden>
-                <span class="pct" id="d4-pct">--</span>
-                <span class="demo__hint" id="d4-scorelbl" style="margin:0">accuracy vs 70% gate</span>
-                <span class="d-gate pending" id="d4-gate">Gate: pending</span>
-              </div>
-              <div class="d-panel" id="d4-root" hidden>
-                <h5>Root cause</h5>
-                <div class="d-quote">Two ambiguous items were forced into a bug-or-change verdict. Fix: add a "needs more info" class, then re-run on a held-out, pre-registered wave.</div>
-              </div>
-              <div class="d-row" id="d4-controls" style="margin-top:0.9rem"><button class="d-btn" data-act="wave0">Run Wave 0</button></div>
-              <p class="demo__hint">Blind waves with known outcomes. The system only advances on held-out performance.</p>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- 05 -->
-      <article class="case reveal">
-        <div class="case-num">05</div>
-        <div class="case-body">
-          <div class="case-lead">
-            <span class="case-kicker">SMB delivery / in build</span>
-            <h3>Replacing a crane-rental company's Excel weekplanning</h3>
-          </div>
-          <div class="case-grid">
-            <dl class="spec">
-              <div><dt>Context</dt><dd>Small crane-rental business</dd></div>
-              <div><dt>Role</dt><dd>Solo build</dd></div>
-              <div><dt>Stack</dt><dd>Next.js, Postgres, Drizzle, SheetJS</dd></div>
-            </dl>
-            <div class="narrative">
-              <div class="blk"><h4>Challenge</h4><p>The weekly crew and crane plan lived in Excel, then got printed on A4 for the crews. Pen edits on the paper, a swapped shift or a delayed site, never made it back into the file, so the two copies drifted apart during the week.</p></div>
-              <div class="blk"><h4>Approach</h4><p>A single-planner web app: a weekly crew grid, a crane-fleet view, and the same PDF, PNG, and Excel export and WhatsApp handoff the company already uses. Excel stays a first-class import and export format, so the spreadsheet is still valid if the app is ever unavailable, and a conflict engine flags a double-booked crane the moment it happens.</p></div>
-              <div class="blk outcome"><h4>Outcome</h4><p>In build. My estimate, not audited: building and eyeballing a week by hand took on the order of an hour, and a double-booking was easy to miss. Nine phases were sequenced on a public status page before a line of production code.</p></div>
-              <div class="tags"><span class="tag">Next.js</span><span class="tag">Postgres</span><span class="tag">Drizzle ORM</span><span class="tag">SheetJS</span></div>
-            </div>
-          </div>
-          <div class="demo" id="d5">
-            <div class="demo__bar"><span class="demo__dots"><i></i><i></i><i></i></span><span class="demo__title">weekplanner</span><span class="demo__tag">Mock data &middot; try it</span></div>
-            <div class="demo__body">
-              <div class="d-tablewrap"><div class="wgrid" id="d5-grid"></div></div>
-              <div class="wbanner">
-                <span class="d-pill green" id="d5-conflicts">No conflicts</span>
-                <button class="d-btn ghost sm" id="d5-export">Export week (xlsx)</button>
-                <span class="wtoast" id="d5-toast" hidden></span>
-              </div>
-              <p class="demo__hint">Click a cell to reassign its crane. A crane double-booked on one day is flagged instantly. Anonymized: real crews and sites stay in a private repo.</p>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- 06 -->
-      <article class="case rev reveal">
-        <div class="case-num">06</div>
-        <div class="case-body">
-          <div class="case-lead">
-            <span class="case-kicker">Personal tooling / knowledge</span>
-            <h3>A personal wiki that only grows from finished work</h3>
-          </div>
-          <div class="case-grid">
-            <div class="narrative">
-              <div class="blk"><h4>Challenge</h4><p>Notes organized by time get archived and never reread. Notes organized by project die the moment the project ends. I wanted a wiki that survives both, with a mechanical guarantee that it stays honest: no article for an idea that never actually shipped.</p></div>
-              <div class="blk"><h4>Approach</h4><p>A four-stage pipeline, inbox to projects to output to wiki, built on Andrej Karpathy's concept-organized "personal Wikipedia, not a journal" pattern. A custom /harvest command is the only door into the wiki: it refuses to run unless a project's status is done, then distills the transferable pattern instead of summarizing the narrative.</p></div>
-              <div class="blk outcome"><h4>Outcome</h4><p>Seven notes in inbox, fifteen active projects, two shipped output artifacts, and seventeen distilled wiki articles, including one on the method itself. Plain markdown only, no plugin dependency, so the vault opens in any reader.</p></div>
-              <div class="tags"><span class="tag">Obsidian</span><span class="tag">Claude Code</span><span class="tag">Markdown</span></div>
-            </div>
-            <dl class="spec">
-              <div><dt>Context</dt><dd>Personal knowledge system</dd></div>
-              <div><dt>Role</dt><dd>Designed and built</dd></div>
-              <div><dt>Stack</dt><dd>Obsidian, Claude Code, Markdown</dd></div>
-            </dl>
-          </div>
-          <div class="demo" id="d6">
-            <div class="demo__bar"><span class="demo__dots"><i></i><i></i><i></i></span><span class="demo__title">knowledge-vault</span><span class="demo__tag">Mock data &middot; try it</span></div>
-            <div class="demo__body">
-              <div class="vcount" id="d6-count"></div>
-              <div class="vault">
-                <div class="vcol"><h5>Projects (sample)</h5><div id="d6-projects"></div></div>
-                <div class="vcol"><h5>Wiki (sample)</h5><div id="d6-wiki"></div></div>
-              </div>
-              <p class="demo__hint">/harvest refuses to run until a project is done, so the wiki only ever grows from finished work.</p>
-            </div>
-          </div>
-        </div>
-      </article>
-
     </div>
   </section>
 
@@ -1403,6 +1130,176 @@
         </article>
       </div>
       <p class="clients-note">Visuals are schematic. Client names and branding are not shown.</p>
+
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section class="section" id="work" aria-labelledby="work-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">Selected work</p>
+          <h2 id="work-title" style="margin-top:1rem">Systems I designed, shipped, and operated.</h2>
+        </div>
+        <p>Four working systems, not tutorials. Each covers the problem, my role, the approach, and a small prototype you can click.</p>
+      </div>
+
+      <!-- 01 -->
+      <article class="case reveal">
+        <div class="case-num">01</div>
+        <div class="case-body">
+          <div class="case-lead">
+            <span class="case-kicker">Internal tooling / sales operations</span>
+            <h3>An agentic sales-ops system where the issue tracker is the CRM</h3>
+          </div>
+          <div class="case-grid">
+            <dl class="spec">
+              <div><dt>Context</dt><dd>CPQ software vendor, internal build</dd></div>
+              <div><dt>Role</dt><dd>Product owner and sole builder</dd></div>
+              <div><dt>Stack</dt><dd>Claude, Jira API, MCP, cron agents</dd></div>
+            </dl>
+            <div class="narrative">
+              <div class="blk"><h4>Challenge</h4><p>The pipeline lived in scattered notes and inboxes. Sourcing, reply triage, and follow-up were manual, and nothing an agent did would be auditable enough to trust.</p></div>
+              <div class="blk"><h4>Approach</h4><p>I made the issue tracker the source of truth and ran cron-driven agents on top of it: a daily prospect sourcer, a reply classifier reading live email over MCP, and a drafting agent, each writing behind a human approval gate with full audit logging and ICP-based prioritization.</p></div>
+              <div class="blk outcome"><h4>Outcome</h4><p>Ran in production for weeks. Daily sourcing and reply classification automated, every write logged, nothing sent to a real person without a human in the loop.</p></div>
+              <div class="tags"><span class="tag">Claude</span><span class="tag">Jira API</span><span class="tag">MCP connectors</span><span class="tag">Cron agents</span></div>
+            </div>
+          </div>
+          <div class="demo" id="d1">
+            <div class="demo__bar"><span class="demo__dots"><i></i><i></i><i></i></span><span class="demo__title">sales-ops board</span><span class="demo__tag">Mock data &middot; try it</span></div>
+            <div class="demo__body">
+              <div class="d-row" style="margin-bottom:0.85rem">
+                <button class="d-btn" id="d1-source">Run daily sourcer</button>
+                <span class="demo__hint" style="margin:0">Sources a suspect, grades it, drafts stay behind a human gate.</span>
+              </div>
+              <div id="d1-list"></div>
+              <div class="d-log" id="d1-log"></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 02 -->
+      <article class="case rev reveal">
+        <div class="case-num">02</div>
+        <div class="case-body">
+          <div class="case-lead">
+            <span class="case-kicker">Method / agent engineering</span>
+            <h3>A multi-agent delivery pipeline with a human approval gate</h3>
+          </div>
+          <div class="case-grid">
+            <div class="narrative">
+              <div class="blk"><h4>Challenge</h4><p>Most agentic coding stops at "the model wrote something." Real delivery needs a plan, a build, tests, a review, and a human decision before anything ships.</p></div>
+              <div class="blk"><h4>Approach</h4><p>Four specialized agents (planner, coder, tester, reviewer) behind one API, with a restart-safe approval gate between plan and execution. Pending approvals persist to disk, so killing and restarting the server never loses or double-runs work.</p></div>
+              <div class="blk outcome"><h4>Outcome</h4><p>A one-command demo reproducible from a clean clone, the whole pipeline and approval path exercised end to end, and a codebase hardened after its own review.</p></div>
+              <div class="tags"><span class="tag">Claude Agent SDK</span><span class="tag">TypeScript</span><span class="tag">Fastify</span></div>
+            </div>
+            <dl class="spec">
+              <div><dt>Context</dt><dd>Hands-on R&amp;D</dd></div>
+              <div><dt>Role</dt><dd>Designed and built</dd></div>
+              <div><dt>Stack</dt><dd>Claude Agent SDK, TypeScript</dd></div>
+            </dl>
+          </div>
+          <div class="demo" id="d3">
+            <div class="demo__bar"><span class="demo__dots"><i></i><i></i><i></i></span><span class="demo__title">agent-pipeline</span><span class="demo__tag">Mock data &middot; try it</span></div>
+            <div class="demo__body">
+              <div class="pipe" id="d3-pipe">
+                <div class="pipe__node" data-node="0"><span class="pipe__conn"></span><span class="pipe__ico">P</span><span><span class="pipe__lbl">Planner</span><br><span class="pipe__sub">drafts the plan</span></span></div>
+                <div class="pipe__node gate" data-node="1"><span class="pipe__conn"></span><span class="pipe__ico">!</span><span><span class="pipe__lbl">Human approval gate</span><br><span class="pipe__sub">restart-safe</span></span></div>
+                <div class="pipe__node" data-node="2"><span class="pipe__conn"></span><span class="pipe__ico">C</span><span><span class="pipe__lbl">Coder</span><br><span class="pipe__sub">implements</span></span></div>
+                <div class="pipe__node" data-node="3"><span class="pipe__conn"></span><span class="pipe__ico">T</span><span><span class="pipe__lbl">Tester</span><br><span class="pipe__sub">runs the suite</span></span></div>
+                <div class="pipe__node" data-node="4"><span class="pipe__conn"></span><span class="pipe__ico">R</span><span><span class="pipe__lbl">Reviewer</span><br><span class="pipe__sub">checks the diff</span></span></div>
+                <div class="pipe__node" data-node="5"><span class="pipe__ico">&#10003;</span><span><span class="pipe__lbl">Shipped</span><br><span class="pipe__sub">done</span></span></div>
+              </div>
+              <div class="d-row" id="d3-controls" style="margin-top:0.9rem"></div>
+              <p class="demo__hint" id="d3-status">Idle. Run the loop, then decide at the gate.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 03 -->
+      <article class="case reveal">
+        <div class="case-num">03</div>
+        <div class="case-body">
+          <div class="case-lead">
+            <span class="case-kicker">LLM reliability / delivery</span>
+            <h3>Bug-vs-change triage, proven before it was trusted</h3>
+          </div>
+          <div class="case-grid">
+            <dl class="spec">
+              <div><dt>Context</dt><dd>Delivery and contract scope</dd></div>
+              <div><dt>Role</dt><dd>Designed the evaluation method</dd></div>
+              <div><dt>Domain</dt><dd>LLM reliability</dd></div>
+            </dl>
+            <div class="narrative">
+              <div class="blk"><h4>Challenge</h4><p>Deciding whether client feedback is a bug (covered) or new scope (billable) is high-stakes and easy to get wrong. I would not put an LLM on that call without proof.</p></div>
+              <div class="blk"><h4>Approach</h4><p>Blind, pre-registered evaluation waves. A first wave with known outcomes exposed the failure modes; I root-caused them, added fixes and a "needs more info" verdict class, then ran a held-out, pre-registered second wave behind a go/no-go gate.</p></div>
+              <div class="blk outcome"><h4>Outcome</h4><p>Failure modes caught before any live use. The system only advances on held-out performance, never on the strength of a good demo.</p></div>
+              <div class="tags"><span class="tag">Claude</span><span class="tag">Evaluation design</span><span class="tag">Jira</span></div>
+            </div>
+          </div>
+          <div class="demo" id="d4">
+            <div class="demo__bar"><span class="demo__dots"><i></i><i></i><i></i></span><span class="demo__title">eval-harness</span><span class="demo__tag">Mock data &middot; try it</span></div>
+            <div class="demo__body">
+              <div class="d-tablewrap">
+                <table class="d-table" id="d4-table">
+                  <thead><tr><th>Feedback item</th><th>Predicted</th><th>Actual</th><th>Result</th></tr></thead>
+                  <tbody id="d4-body"></tbody>
+                </table>
+              </div>
+              <div class="d-score" id="d4-score" hidden>
+                <span class="pct" id="d4-pct">--</span>
+                <span class="demo__hint" id="d4-scorelbl" style="margin:0">accuracy vs 70% gate</span>
+                <span class="d-gate pending" id="d4-gate">Gate: pending</span>
+              </div>
+              <div class="d-panel" id="d4-root" hidden>
+                <h5>Root cause</h5>
+                <div class="d-quote">Two ambiguous items were forced into a bug-or-change verdict. Fix: add a "needs more info" class, then re-run on a held-out, pre-registered wave.</div>
+              </div>
+              <div class="d-row" id="d4-controls" style="margin-top:0.9rem"><button class="d-btn" data-act="wave0">Run Wave 0</button></div>
+              <p class="demo__hint">Blind waves with known outcomes. The system only advances on held-out performance.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 04 -->
+      <article class="case rev reveal">
+        <div class="case-num">04</div>
+        <div class="case-body">
+          <div class="case-lead">
+            <span class="case-kicker">SMB delivery / in build</span>
+            <h3>Replacing a construction company's Excel weekplanning</h3>
+          </div>
+          <div class="case-grid">
+            <div class="narrative">
+              <div class="blk"><h4>Challenge</h4><p>The weekly crew and crane plan lived in Excel, then got printed on A4 for the crews. Pen edits on the paper, a swapped shift or a delayed site, never made it back into the file, so the two copies drifted apart during the week.</p></div>
+              <div class="blk"><h4>Approach</h4><p>A single-planner web app: a weekly crew grid, a crane-fleet view, and the same PDF, PNG, and Excel export and WhatsApp handoff the company already uses. Excel stays a first-class import and export format, so the spreadsheet is still valid if the app is ever unavailable, and a conflict engine flags a double-booked crane the moment it happens.</p></div>
+              <div class="blk outcome"><h4>Outcome</h4><p>In build. My estimate, not audited: building and eyeballing a week by hand took on the order of an hour, and a double-booking was easy to miss. Nine phases were sequenced on a public status page before a line of production code.</p></div>
+              <div class="tags"><span class="tag">Next.js</span><span class="tag">Postgres</span><span class="tag">Drizzle ORM</span><span class="tag">SheetJS</span></div>
+            </div>
+            <dl class="spec">
+              <div><dt>Context</dt><dd>Small construction business</dd></div>
+              <div><dt>Role</dt><dd>Solo build</dd></div>
+              <div><dt>Stack</dt><dd>Next.js, Postgres, Drizzle, SheetJS</dd></div>
+            </dl>
+          </div>
+          <div class="demo" id="d5">
+            <div class="demo__bar"><span class="demo__dots"><i></i><i></i><i></i></span><span class="demo__title">weekplanner</span><span class="demo__tag">Mock data &middot; try it</span></div>
+            <div class="demo__body">
+              <div class="d-tablewrap"><div class="wgrid" id="d5-grid"></div></div>
+              <div class="wbanner">
+                <span class="d-pill green" id="d5-conflicts">No conflicts</span>
+                <button class="d-btn ghost sm" id="d5-export">Export week (xlsx)</button>
+                <span class="wtoast" id="d5-toast" hidden></span>
+              </div>
+              <p class="demo__hint">Click a cell to reassign its crane. A crane double-booked on one day is flagged instantly. Anonymized: real crews and sites stay in a private repo.</p>
+            </div>
+          </div>
+        </div>
+      </article>
 
     </div>
   </section>
@@ -1791,50 +1688,6 @@
     logLine('system', 'board ready &middot; 2 suspects in New');
   })();
 
-  // ---- Demo 2: client delivery portal ----
-  (function () {
-    var list = document.getElementById('d2-list');
-    var input = document.getElementById('d2-input');
-    var submit = document.getElementById('d2-submit');
-    if (!list) return;
-    var reqId = 140;
-    var bugWords = ['broken','break','error','wrong','crash','fail','disappear','missing','bug','glitch','nothing','freeze','does not work','doesn\'t work'];
-    function classify(text) {
-      var t = text.toLowerCase();
-      for (var i = 0; i < bugWords.length; i++) if (t.indexOf(bugWords[i]) !== -1) return 'bug';
-      return 'change';
-    }
-    function card(text, kind) {
-      var id = 'REQ-' + (++reqId);
-      var isBug = kind === 'bug';
-      var el = document.createElement('div');
-      el.className = 'd-card';
-      el.innerHTML =
-        '<div class="d-card__top"><span class="d-pill ' + (isBug ? 'green' : 'steel') + '">' + (isBug ? 'Bug' : 'Change') + '</span>' +
-        '<span class="d-card__title">' + text + '</span><span class="d-card__id">' + id + '</span></div>' +
-        '<div class="d-card__meta">' + (isBug ? 'In scope &middot; covered by support SLA &middot; no charge' : 'New scope &middot; outside contract &middot; quoted separately') + '</div>';
-      list.insertBefore(el, list.firstChild);
-    }
-    function add() {
-      var v = (input.value || '').trim();
-      if (!v) return;
-      card(v, classify(v));
-      input.value = '';
-      input.focus();
-    }
-    submit.addEventListener('click', add);
-    input.addEventListener('keydown', function (e) { if (e.key === 'Enter') add(); });
-    card('Add a transport-cost field to the quote line', 'change');
-    card('Discount line disappears on quote export', 'bug');
-    var signoff = document.getElementById('d2-signoff');
-    signoff.addEventListener('click', function () {
-      document.getElementById('d2-wobar').style.width = '100%';
-      document.getElementById('d2-wopct').textContent = '100%';
-      signoff.textContent = 'Signed off';
-      signoff.disabled = true;
-    });
-  })();
-
   // ---- Demo 3: multi-agent pipeline with a restart-safe gate ----
   (function () {
     var pipe = document.getElementById('d3-pipe');
@@ -2048,61 +1901,6 @@
       clearTimeout(t); t = setTimeout(function () { toast.hidden = true; }, 1800);
     });
     render();
-  })();
-
-  // ---- Demo 6: knowledge vault harvest gate ----
-  (function () {
-    var projEl = document.getElementById('d6-projects');
-    var wikiEl = document.getElementById('d6-wiki');
-    var countEl = document.getElementById('d6-count');
-    if (!projEl) return;
-    var projects = [
-      { name: 'Restart-safe approval gate', status: 'done' },
-      { name: 'Pre-registered eval waves', status: 'done' },
-      { name: 'Issue-tracker as CRM', status: 'active' },
-      { name: 'Excel-to-web weekplanner', status: 'active' }
-    ];
-    var wiki = ['Karpathy wiki pattern', 'Draft-only agent gates'];
-    var baseWiki = 17;
-    function counts() {
-      countEl.innerHTML =
-        '<span>inbox <b>7</b></span><span>projects <b>15</b></span><span>output <b>2</b></span>' +
-        '<span>wiki <b>' + (baseWiki + (wiki.length - 2)) + '</b></span>';
-    }
-    function renderWiki() {
-      wikiEl.innerHTML = wiki.map(function (w, i) { return '<div class="vwiki' + (i >= 2 ? ' fresh' : '') + '">[[' + w + ']]</div>'; }).join('');
-    }
-    function renderProjects() {
-      projEl.innerHTML = '';
-      projects.forEach(function (p, i) {
-        var el = document.createElement('div');
-        el.className = 'vproj' + (p.harvested ? ' harvested' : '');
-        var pill = '<span class="d-pill ' + (p.status === 'done' ? 'green' : 'gray') + '">' + p.status + '</span>';
-        var acts = '';
-        if (!p.harvested) {
-          if (p.status === 'active') acts += '<button class="d-btn ghost sm" data-done="' + i + '">Mark done</button>';
-          acts += '<button class="d-btn sm" data-harvest="' + i + '">Harvest</button>';
-        }
-        el.innerHTML =
-          '<div class="vproj__top">' + pill + '<span class="vproj__name">' + p.name + '</span><span class="vproj__act">' + acts + '</span></div>' +
-          (p.err ? '<div class="vproj__err">' + p.err + '</div>' : '') +
-          (p.harvested ? '<div class="vproj__done">Harvested to [[' + p.name + ']]</div>' : '');
-        projEl.appendChild(el);
-      });
-    }
-    projEl.addEventListener('click', function (e) {
-      var d = e.target.closest('[data-done]'), h = e.target.closest('[data-harvest]');
-      if (d) {
-        var i = +d.getAttribute('data-done');
-        projects[i].status = 'done'; projects[i].err = null; renderProjects();
-      } else if (h) {
-        var j = +h.getAttribute('data-harvest'), p = projects[j];
-        if (p.status !== 'done') { p.err = 'status: active. /harvest refuses. Mark it done first.'; renderProjects(); return; }
-        p.harvested = true; p.err = null; wiki.push(p.name);
-        renderWiki(); renderProjects(); counts();
-      }
-    });
-    counts(); renderWiki(); renderProjects();
   })();
 </script>
 </body>
