@@ -1,6 +1,6 @@
 ---
-title: Replacing a crane-rental company's Excel weekplanning
-summary: A clickable planner for a small Belgian crane-rental business, replacing an Excel plus printed-A4 workflow that drifted out of sync.
+title: Replacing a construction company's Excel weekplanning
+summary: A clickable planner for a small Belgian construction business, replacing an Excel plus printed-A4 workflow that drifted out of sync.
 date: 2026-06-10
 stack: ["Next.js", "Postgres", "Drizzle ORM", "SheetJS"]
 cover: /images/builds/werf-planner-light.png
@@ -10,7 +10,7 @@ status: In build
 
 ## The problem
 
-A small crane-rental company ran its weekly crew and crane planning in Excel, then printed the
+A small construction company ran its weekly crew and crane planning in Excel, then printed the
 sheet on A4 for the crews. Pen marks on the paper (a swapped shift, a delayed site) never made it
 back into the file, so the two copies of the plan quietly drifted apart during the week.
 
