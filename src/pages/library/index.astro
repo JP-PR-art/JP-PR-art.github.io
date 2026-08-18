@@ -120,6 +120,12 @@ const books = entries
 .scene-wrap .face-label { position: absolute; left: 50%; transform: translateX(-50%); top: 40%; z-index: 3; pointer-events: none; text-align: center; }
 .scene-wrap .face-label .w { font-family: var(--display); font-weight: 900; font-size: 15px; letter-spacing: 0.28em; text-indent: 0.28em; color: #ffe9c4; text-shadow: 0 0 12px rgba(255,180,80,0.95), 0 0 26px rgba(255,150,50,0.6); white-space: nowrap; }
 .scene-wrap .face-label .c { display: block; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; color: #ffdba8; opacity: 0.85; text-shadow: 0 0 8px rgba(255,170,70,0.8); margin-top: 1px; }
+.scene-wrap .embedded-book { position: absolute; width: 30px; height: 44px; border: none; padding: 0; border-radius: 2px; overflow: hidden; cursor: pointer; z-index: 2; background: #3a2c1c; box-shadow: 0 3px 8px rgba(0,0,0,0.5); transition: transform 0.2s ease; }
+.scene-wrap .embedded-book img { width: 100%; height: 100%; object-fit: cover; display: block; margin: 0; border: none; padding: 0; }
+.scene-wrap .embedded-book .gen { position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 2px; font-family: var(--display); font-weight: 800; font-size: 5.5px; line-height: 1.1; color: #fff; text-align: left; }
+.scene-wrap .embedded-book:hover, .scene-wrap .embedded-book:focus-visible { transform: scale(1.7); z-index: 3; }
+.scene-wrap .embedded-book.reading { animation: lib-embglow 2.4s ease-in-out infinite; }
+@keyframes lib-embglow { 0%,100% { box-shadow: 0 0 10px 3px rgba(255,140,50,0.7); } 50% { box-shadow: 0 0 22px 8px rgba(255,150,60,0.95); } }
 .scene-wrap .tower-sign { position: absolute; top: 26px; left: 0; right: 0; text-align: center; z-index: 4; pointer-events: none; }
 .scene-wrap .tower-sign .kr { font-family: var(--display); font-weight: 800; font-size: 21px; letter-spacing: 0.12em; color: #ffe9c4; text-shadow: 0 0 14px rgba(255,190,90,1), 0 0 34px rgba(255,150,50,0.75); }
 .scene-wrap .tower-sign .en { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.42em; text-indent: 0.42em; color: #ffdba8; opacity: 0.9; text-shadow: 0 0 8px rgba(255,170,70,0.9); margin-top: 2px; }
@@ -192,13 +198,15 @@ const books = entries
   // Shelf rows of face-out book fronts (covers with a title band), with
   // occasional spine clusters and gaps for a real-bookshop texture.
   var seed = 0;
-  function fillFace(face, W) {
+  function fillFace(face, W, res) {
     var H = 415, rowH = 25.5, parts = [];
     for (var y = rowH; y < H - 6; y += rowH) {
+      var rowReserved = res && y > res.yTop && (y - rowH) < res.yBot;
       parts.push('<rect x="0" y="' + y.toFixed(1) + '" width="' + W + '" height="3" fill="#5a3a18"/>');
       parts.push('<rect x="0" y="' + (y + 3).toFixed(1) + '" width="' + W + '" height="1.4" fill="#2e1c0a" opacity="0.6"/>');
       var x = 3 + pr(++seed, 1) * 5;
       while (x < W - 8) {
+        if (rowReserved && x > res.x1 - 4 && x < res.x2) { x = res.x2 + 2; continue; }
         seed++;
         var r = pr(seed, 6);
         if (r < 0.7) {
@@ -226,9 +234,47 @@ const books = entries
     }
     face.insertAdjacentHTML('afterbegin', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' 415" preserveAspectRatio="none">' + parts.join('') + '</svg>');
   }
-  fillFace(document.querySelector('.face-front'), 330);
-  fillFace(document.querySelector('.face-left'), 118);
-  fillFace(document.querySelector('.face-right'), 118);
+  // Real books are embedded into the tower itself: reserve a slot on each
+  // face's shelf band, then place the actual covers there (clickable).
+  var faceEls = {
+    reading: document.querySelector('.face-front'),
+    read: document.querySelector('.face-left'),
+    toread: document.querySelector('.face-right')
+  };
+  var faceW = { reading: 330, read: 118, toread: 118 };
+  var EMB_W = 30, EMB_H = 44, EMB_BOTTOM = 306;
+  function reservedFor(status) {
+    var n = BOOKS.filter(function (b) { return b.status === status; }).length;
+    if (!n) return null;
+    var W = faceW[status];
+    var spacing = Math.min(38, (W - 24 - EMB_W) / Math.max(1, n - 1) || 38);
+    var total = spacing * (n - 1) + EMB_W;
+    return { x1: W / 2 - total / 2 - 4, x2: W / 2 + total / 2 + 4, yTop: EMB_BOTTOM - EMB_H - 2, yBot: EMB_BOTTOM, spacing: spacing };
+  }
+  var resFor = {};
+  Object.keys(faceEls).forEach(function (status) {
+    resFor[status] = reservedFor(status);
+    fillFace(faceEls[status], faceW[status], resFor[status]);
+  });
+  Object.keys(faceEls).forEach(function (status) {
+    var res = resFor[status];
+    if (!res) return;
+    BOOKS.filter(function (b) { return b.status === status; }).forEach(function (b, i) {
+      var el = document.createElement('button');
+      el.className = 'embedded-book ' + b.status;
+      el.style.left = (res.x1 + 4 + i * res.spacing).toFixed(1) + 'px';
+      el.style.top = (EMB_BOTTOM - EMB_H) + 'px';
+      el.setAttribute('aria-label', b.title + ' by ' + b.author);
+      if (b.cover) {
+        el.innerHTML = '<img src="' + esc(b.cover) + '" alt="">';
+      } else {
+        var c = spineColor(b.title);
+        el.innerHTML = '<span class="gen" style="background: linear-gradient(160deg, ' + c + ', color-mix(in srgb, ' + c + ' 60%, #000))">' + esc(b.title) + '</span>';
+      }
+      el.addEventListener('click', function (e) { e.stopPropagation(); if (dragDist < 8) openBook(b); });
+      faceEls[status].appendChild(el);
+    });
+  });
 
   ['read', 'reading', 'toread'].forEach(function (st) {
     var n = BOOKS.filter(function (b) { return b.status === st; }).length;
