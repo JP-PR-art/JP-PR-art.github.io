@@ -1,0 +1,431 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const entries = await getCollection('library');
+const books = entries
+  .map((e) => ({
+    id: e.id,
+    title: e.data.title,
+    author: e.data.author,
+    status: e.data.status === 'to-read' ? 'toread' : e.data.status,
+    cover: e.data.cover ?? null,
+    started: e.data.started ? e.data.started.toISOString().slice(0, 10) : null,
+    finished: e.data.finished ? e.data.finished.toISOString().slice(0, 10) : null,
+    note: (e.body ?? '').trim(),
+  }))
+  .sort((a, b) => (b.started ?? '').localeCompare(a.started ?? ''));
+---
+<Base title="Library, JP Perez" description="The books I'm reading, have read, and plan to read, shelved in a replica of Seoul's Starfield Library." wide>
+  <p class="eyebrow">Reading log</p>
+  <h1>Library</h1>
+  <p>A replica of the Starfield Library in Seoul. The tower's three faces are my three shelves:
+  <strong>read</strong> on the left, <strong>reading now</strong> in front, <strong>to read</strong> on the right.
+  Move the mouse to look around, click a face to step closer, click a book to open it.</p>
+
+  <div class="scene-wrap" id="sceneWrap">
+    <span class="scene-hint">move mouse to look · click a tower face to step closer</span>
+    <div class="scene-viewport" id="viewport">
+      <div class="layer" id="layerBack">
+        <div class="ceiling"></div>
+        <div class="glass glass-l"></div>
+        <div class="glass glass-r"></div>
+      </div>
+      <div class="layer" id="layerMid">
+        <div class="mezz mezz-l"></div>
+        <div class="mezz mezz-r"></div>
+        <div class="store store-l"></div>
+        <div class="store store-r"></div>
+        <div class="floor"></div>
+        <div class="tower-shadow"></div>
+      </div>
+      <div class="layer" id="layerLife">
+        <div class="kiosk"><div class="roof"></div><div class="body"></div></div>
+        <div class="chairs"></div>
+        <div class="bench" style="left:20%; top:66%; width:90px;"></div>
+        <div class="bench" style="left:26%; top:71%; width:70px;"></div>
+        <div class="plant" style="left:33%; top:60%;"></div>
+        <div class="plant" style="left:37%; top:63%; transform: scale(1.2);"></div>
+        <div class="person" style="left:14%; top:68%;"></div>
+        <div class="person" style="left:18%; top:74%;"></div>
+        <div class="person p-blur" style="left:47%; top:76%; transform: scale(1.25);"></div>
+        <div class="person" style="left:29%; top:66%;"></div>
+        <div class="person" style="left:63%; top:69%;"></div>
+        <div class="person" style="left:82%; top:64%;"></div>
+        <div class="person p-blur" style="left:70%; top:78%; transform: scale(1.3);"></div>
+        <div class="person" style="left:9%; top:63%; transform: scale(0.85);"></div>
+      </div>
+
+      <div class="atrium">
+        <div class="tower" id="tower">
+          <div class="face face-left" data-status="read" role="button" tabindex="0" aria-label="Read shelf">
+            <div class="face-label"><span class="w">READ</span><span class="c" data-count="read"></span></div>
+          </div>
+          <div class="face face-right" data-status="toread" role="button" tabindex="0" aria-label="To-read shelf">
+            <div class="face-label"><span class="w">TO READ</span><span class="c" data-count="toread"></span></div>
+          </div>
+          <div class="face face-front" data-status="reading" role="button" tabindex="0" aria-label="Reading now shelf">
+            <div class="tower-sign"><span class="kr">별마당 도서관</span><span class="en">JP · LIBRARY</span></div>
+            <div class="face-label" style="top:47%"><span class="w">READING NOW</span><span class="c" data-count="reading"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="escalator" style="left: 13%; top: 67%;">
+        <div class="esc-under"></div>
+        <div class="esc-ramp"></div>
+        <div class="esc-glass"></div>
+        <div class="esc-person" style="left: 110px; top: -66px;"></div>
+      </div>
+      <div class="escalator" style="left: 14.5%; top: 69%; opacity: 0.9;">
+        <div class="esc-under"></div>
+        <div class="esc-ramp"></div>
+        <div class="esc-glass"></div>
+      </div>
+
+      <div class="closeup" id="closeup">
+        <button class="closeup-back" id="closeupBack">← back to the atrium</button>
+        <div class="closeup-panel">
+          <div class="cw" id="closeupWord"></div>
+          <div class="closeup-shelf" id="closeupShelf"></div>
+        </div>
+      </div>
+
+      <div class="detail-overlay" id="overlay">
+        <div class="detail-card">
+          <button class="detail-close" id="dClose">✕ close</button>
+          <div class="detail-cover" id="dCover"></div>
+          <div class="detail-info">
+            <h3 id="dTitle"></h3>
+            <p class="author" id="dAuthor"></p>
+            <span class="detail-status" id="dStatus"></span>
+            <p class="dates" id="dDates"></p>
+            <p class="blurb" id="dBlurb"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="scene-legend" id="legend">
+      <button class="legend-chip" data-status="read"><span class="dot dot-read"></span>read · left face</button>
+      <button class="legend-chip" data-status="reading"><span class="dot dot-reading"></span>reading now · front face</button>
+      <button class="legend-chip" data-status="toread"><span class="dot dot-toread"></span>to read · right face</button>
+    </div>
+  </div>
+
+  <script type="application/json" id="library-data" set:html={JSON.stringify(books)} />
+</Base>
+
+<style is:global>
+/* Library scene. Global on purpose: most nodes are created by the script below,
+   which Astro's scoped styles cannot reach. Everything is namespaced under .scene-wrap. */
+.scene-wrap { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; position: relative; margin: 1.6rem 0 0.6rem; user-select: none; background: #efece3; }
+.scene-hint { position: absolute; top: 0.7rem; left: 50%; transform: translateX(-50%); font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; color: #6d6250; background: rgba(250,248,240,0.82); border: 1px solid rgba(0,0,0,0.08); border-radius: 99px; padding: 0.15rem 0.8rem; pointer-events: none; z-index: 30; white-space: nowrap; }
+.scene-viewport { height: clamp(430px, 68vh, 620px); overflow: hidden; position: relative; }
+.scene-wrap .layer { position: absolute; inset: 0; pointer-events: none; }
+
+.scene-wrap .ceiling {
+  position: absolute; left: -4%; right: -4%; top: 0; height: 36%;
+  background:
+    radial-gradient(ellipse 60% 120% at 50% -10%, rgba(255,255,255,0.95), rgba(255,255,255,0) 70%),
+    repeating-linear-gradient(45deg, rgba(120,115,100,0.16) 0 1px, transparent 1px 13px),
+    repeating-linear-gradient(-45deg, rgba(120,115,100,0.16) 0 1px, transparent 1px 13px),
+    linear-gradient(180deg, #f8f6ef, #eeeadf);
+  border-radius: 0 0 45% 45% / 0 0 14% 14%;
+  box-shadow: 0 8px 30px rgba(180,170,150,0.35);
+}
+.scene-wrap .ceiling::after { content: ""; position: absolute; left: 8%; right: 8%; top: 12%; height: 3px; background: rgba(120,115,100,0.18); border-radius: 99px; }
+
+.scene-wrap .glass { position: absolute; top: 6%; height: 30%; width: 23%;
+  background:
+    repeating-linear-gradient(90deg, rgba(90,100,110,0.25) 0 2px, transparent 2px 34px),
+    repeating-linear-gradient(0deg, rgba(90,100,110,0.18) 0 2px, transparent 2px 44px),
+    linear-gradient(200deg, #cfd8dd, #b9c6cd 60%, #a7b5bd);
+  opacity: 0.9;
+}
+.scene-wrap .glass-l { left: 0; transform: skewY(6deg); border-right: 4px solid #e8e4d8; }
+.scene-wrap .glass-r { right: 0; transform: skewY(-6deg); border-left: 4px solid #e8e4d8; }
+
+.scene-wrap .mezz { position: absolute; top: 34%; height: 12%; width: 34%; background: linear-gradient(180deg, #efe9db, #e2dbc9 55%, #d5cdb8); box-shadow: 0 6px 14px rgba(120,110,90,0.35); }
+.scene-wrap .mezz::before { content: ""; position: absolute; left: 0; right: 0; top: -26px; height: 26px;
+  background:
+    repeating-linear-gradient(90deg, rgba(70,65,55,0.55) 0 2px, transparent 2px 14px),
+    linear-gradient(180deg, rgba(240,238,230,0.4), rgba(240,238,230,0.15));
+  border-top: 3px solid #9c9382; }
+.scene-wrap .mezz::after { content: ""; position: absolute; left: 4%; right: 4%; top: -58px; height: 30px;
+  background: repeating-linear-gradient(90deg, #7a4a2a 0 3px, #a86a38 3px 5px, #4a5a6a 5px 7px, #8f5a30 7px 10px, transparent 10px 12px);
+  opacity: 0.8; border-bottom: 4px solid #6b5236; }
+.scene-wrap .mezz-l { left: 0; border-radius: 0 18px 18px 0; }
+.scene-wrap .mezz-r { right: 0; border-radius: 18px 0 0 18px; }
+
+.scene-wrap .store { position: absolute; top: 46%; height: 13%; width: 32%; background: linear-gradient(180deg, #2e2318, #4a3822 40%, #5c452a); box-shadow: inset 0 0 40px rgba(0,0,0,0.5); overflow: hidden; }
+.scene-wrap .store::before { content: ""; position: absolute; inset: 8% 3%;
+  background: repeating-linear-gradient(90deg, rgba(255,190,110,0.55) 0 26px, rgba(30,22,14,0.9) 26px 30px);
+  filter: blur(1px); opacity: 0.85; }
+.scene-wrap .store::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: #1e160e; }
+.scene-wrap .store-l { left: 0; } .scene-wrap .store-r { right: 0; }
+
+.scene-wrap .floor { position: absolute; left: 0; right: 0; top: 58%; bottom: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 0%, rgba(255,235,200,0.5), transparent 70%),
+    repeating-linear-gradient(90deg, rgba(90,60,35,0.18) 0 2px, transparent 2px 64px),
+    repeating-linear-gradient(0deg, rgba(90,60,35,0.10) 0 1px, transparent 1px 26px),
+    linear-gradient(180deg, #b98a58, #a97a4a 40%, #8f6238);
+}
+.scene-wrap .tower-shadow { position: absolute; left: 50%; top: 76%; width: 560px; height: 70px; margin-left: -280px; background: radial-gradient(ellipse, rgba(60,35,15,0.45), transparent 70%); filter: blur(6px); }
+
+.scene-wrap .person { position: absolute; width: 8px; height: 22px; background: #2a2622; border-radius: 4px 4px 2px 2px; opacity: 0.85; }
+.scene-wrap .person::before { content: ""; position: absolute; top: -7px; left: 1px; width: 6px; height: 6px; border-radius: 50%; background: #2a2622; }
+.scene-wrap .p-blur { filter: blur(1.5px); opacity: 0.6; }
+.scene-wrap .chairs { position: absolute; right: 4%; top: 63%; width: 26%; height: 12%; transform: skewX(-16deg);
+  background: repeating-linear-gradient(90deg, rgba(25,25,28,0.85) 0 7px, transparent 7px 20px);
+  -webkit-mask-image: repeating-linear-gradient(0deg, #000 0 9px, transparent 9px 22px); mask-image: repeating-linear-gradient(0deg, #000 0 9px, transparent 9px 22px);
+  opacity: 0.8; }
+.scene-wrap .kiosk { position: absolute; left: 3%; top: 50%; width: 90px; height: 74px; }
+.scene-wrap .kiosk .roof { position: absolute; top: 0; left: 4px; right: 4px; height: 20px; background: linear-gradient(180deg, #e0632a, #b84a1a); border-radius: 8px 8px 2px 2px; }
+.scene-wrap .kiosk .body { position: absolute; top: 20px; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, #3a2c1c, #241a10); box-shadow: inset 0 0 18px rgba(255,180,90,0.25); }
+.scene-wrap .kiosk .body::before { content: ""; position: absolute; inset: 12% 10%; background: repeating-linear-gradient(0deg, rgba(255,200,130,0.5) 0 5px, transparent 5px 12px); }
+.scene-wrap .bench { position: absolute; height: 12px; background: linear-gradient(180deg, #6b4a2c, #4a3018); border-radius: 6px; box-shadow: 0 6px 8px rgba(50,30,10,0.4); }
+.scene-wrap .plant { position: absolute; width: 54px; height: 40px; background: radial-gradient(circle at 30% 40%, #4a7a3a 8px, transparent 9px), radial-gradient(circle at 60% 30%, #3d6b30 10px, transparent 11px), radial-gradient(circle at 75% 55%, #558a42 9px, transparent 10px), radial-gradient(circle at 45% 60%, #467736 10px, transparent 11px); filter: saturate(0.9); }
+
+.scene-wrap .escalator { position: absolute; z-index: 6; pointer-events: none; }
+.scene-wrap .esc-ramp { position: absolute; width: 230px; height: 15px; transform: rotate(-24deg); transform-origin: left bottom; background: repeating-linear-gradient(90deg, #8a8f96 0 6px, #6e737a 6px 12px); border-radius: 3px; box-shadow: 0 4px 10px rgba(40,30,20,0.4); }
+.scene-wrap .esc-glass { position: absolute; width: 230px; height: 20px; top: -19px; transform: rotate(-24deg); transform-origin: left bottom; background: linear-gradient(180deg, rgba(230,240,245,0.45), rgba(200,215,225,0.2)); border-top: 2px solid #cfd6da; border-radius: 3px; }
+.scene-wrap .esc-under { position: absolute; width: 215px; height: 30px; top: 6px; left: 6px; transform: rotate(-24deg); transform-origin: left bottom; background: linear-gradient(180deg, #5d554a, #3e382f); clip-path: polygon(0 0, 100% 0, 100% 30%, 6% 100%, 0 100%); border-radius: 3px; }
+.scene-wrap .esc-person { position: absolute; width: 8px; height: 20px; background: #33302c; border-radius: 4px; }
+.scene-wrap .esc-person::before { content: ""; position: absolute; top: -6px; left: 1px; width: 6px; height: 6px; border-radius: 50%; background: #33302c; }
+
+.scene-wrap .atrium { position: absolute; inset: 0; perspective: 1500px; perspective-origin: 50% 42%; z-index: 5; }
+.scene-wrap .tower { position: absolute; left: 50%; bottom: 132px; width: 330px; height: 415px; margin-left: -165px; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.3,0.7,0.3,1); will-change: transform; }
+.scene-wrap .face { position: absolute; top: 0; height: 100%; overflow: hidden; cursor: pointer; background: linear-gradient(180deg, #b07a42, #9a662f 30%, #8a5826 70%, #7a4c20); }
+.scene-wrap .face svg { display: block; width: 100%; height: 100%; }
+.scene-wrap .face::after { content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 42%, rgba(255,190,100,0.28), transparent 75%),
+    linear-gradient(90deg, rgba(40,20,5,0.5), transparent 12%, transparent 88%, rgba(40,20,5,0.5)),
+    linear-gradient(180deg, rgba(40,20,5,0.3), transparent 15%, transparent 82%, rgba(40,20,5,0.45));
+  pointer-events: none; }
+.scene-wrap .face:hover::after, .scene-wrap .face:focus-visible::after { background:
+    radial-gradient(ellipse 90% 60% at 50% 42%, rgba(255,205,120,0.45), transparent 78%),
+    linear-gradient(90deg, rgba(40,20,5,0.4), transparent 12%, transparent 88%, rgba(40,20,5,0.4)),
+    linear-gradient(180deg, rgba(40,20,5,0.25), transparent 15%, transparent 82%, rgba(40,20,5,0.4)); }
+.scene-wrap .face-front { left: 0; width: 100%; border-radius: 34px 34px 4px 4px / 20px 20px 4px 4px; transform: translateZ(58px); }
+.scene-wrap .face-left  { left: -118px; width: 118px; transform-origin: 100% 50%; transform: translateZ(58px) rotateY(-64deg); border-radius: 26px 0 0 4px / 16px 0 0 4px; }
+.scene-wrap .face-right { right: -118px; width: 118px; transform-origin: 0% 50%; transform: translateZ(58px) rotateY(64deg); border-radius: 0 26px 4px 0 / 0 16px 4px 0; }
+.scene-wrap .face-label { position: absolute; left: 50%; transform: translateX(-50%); top: 40%; z-index: 3; pointer-events: none; text-align: center; }
+.scene-wrap .face-label .w { font-family: var(--display); font-weight: 900; font-size: 15px; letter-spacing: 0.28em; text-indent: 0.28em; color: #ffe9c4; text-shadow: 0 0 12px rgba(255,180,80,0.95), 0 0 26px rgba(255,150,50,0.6); white-space: nowrap; }
+.scene-wrap .face-label .c { display: block; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; color: #ffdba8; opacity: 0.85; text-shadow: 0 0 8px rgba(255,170,70,0.8); margin-top: 1px; }
+.scene-wrap .tower-sign { position: absolute; top: 26px; left: 0; right: 0; text-align: center; z-index: 4; pointer-events: none; }
+.scene-wrap .tower-sign .kr { font-family: var(--display); font-weight: 800; font-size: 21px; letter-spacing: 0.12em; color: #ffe9c4; text-shadow: 0 0 14px rgba(255,190,90,1), 0 0 34px rgba(255,150,50,0.75); }
+.scene-wrap .tower-sign .en { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.42em; text-indent: 0.42em; color: #ffdba8; opacity: 0.9; text-shadow: 0 0 8px rgba(255,170,70,0.9); margin-top: 2px; }
+.scene-wrap .tower.zoomed { transform: scale(2.35) translateY(9%); }
+.scene-viewport.dimmed .layer, .scene-viewport.dimmed .escalator { filter: brightness(0.55) saturate(0.8); transition: filter 0.5s ease; }
+
+.scene-wrap .closeup { position: absolute; inset: 0; z-index: 20; display: none; align-items: center; justify-content: center; background: rgba(20,12,5,0.55); backdrop-filter: blur(4px); }
+.scene-wrap .closeup.open { display: flex; }
+.scene-wrap .closeup-panel { width: min(88%, 700px); background: linear-gradient(180deg, #8a5826, #6e4319); border-radius: 14px; border: 1px solid rgba(255,200,120,0.25); box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 0 60px rgba(255,170,80,0.12); padding: 1.6rem 2rem 2rem; animation: lib-stepin 0.45s cubic-bezier(0.2,0.8,0.25,1); }
+@keyframes lib-stepin { from { transform: scale(0.55); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.scene-wrap .closeup-panel .cw { font-family: var(--display); font-weight: 900; font-size: 26px; letter-spacing: 0.3em; text-indent: 0.3em; color: #ffe9c4; text-shadow: 0 0 16px rgba(255,180,80,0.95); text-align: center; margin-bottom: 1.2rem; }
+.scene-wrap .closeup-shelf { position: relative; min-height: 150px; border-bottom: 12px solid #4a3018; background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.1)); border-radius: 4px 4px 0 0; display: flex; align-items: flex-end; justify-content: center; gap: 10px; padding: 14px 18px 0; flex-wrap: wrap; }
+.scene-wrap .closeup-shelf .empty-hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 13px; font-style: italic; letter-spacing: 0.05em; color: #ffdba8; opacity: 0.6; }
+.scene-wrap .bigbook { position: relative; width: 34px; height: 118px; border-radius: 3px 3px 0 0; cursor: pointer; transition: transform 0.22s ease; border: none; padding: 0; }
+.scene-wrap .bigbook:hover, .scene-wrap .bigbook:focus-visible { transform: translateY(-14px) rotate(-5deg); }
+.scene-wrap .bigbook .bt { position: absolute; left: 4px; right: 4px; top: 9px; height: 3px; background: rgba(255,255,255,0.55); }
+.scene-wrap .bigbook .bb { position: absolute; left: 4px; right: 4px; bottom: 12px; height: 3px; background: rgba(0,0,0,0.3); }
+.scene-wrap .bigbook.reading { animation: lib-glow 2.4s ease-in-out infinite; transform: rotate(-6deg); }
+.scene-wrap .bigbook.reading:hover, .scene-wrap .bigbook.reading:focus-visible { transform: translateY(-14px) rotate(-8deg); }
+@keyframes lib-glow { 0%,100% { box-shadow: 0 0 20px 4px rgba(255,140,50,0.55); } 50% { box-shadow: 0 0 40px 12px rgba(255,150,60,0.8); } }
+.scene-wrap .bigbook.toread { background: repeating-linear-gradient(45deg, #c9b285 0 8px, #bfa87a 8px 16px) !important; outline: 2px dashed rgba(90,70,40,0.6); outline-offset: -4px; }
+.scene-wrap .closeup-back { position: absolute; top: 0.9rem; right: 1rem; font-family: var(--mono); font-size: 0.78rem; background: rgba(250,245,235,0.92); color: #5a4a35; border: none; border-radius: 6px; padding: 0.3rem 0.8rem; cursor: pointer; z-index: 22; }
+.scene-wrap .closeup-back:hover { background: #fff; }
+
+.scene-wrap .detail-overlay { position: absolute; inset: 0; z-index: 25; display: none; align-items: center; justify-content: center; background: color-mix(in srgb, var(--navy) 30%, transparent); backdrop-filter: blur(3px); }
+.scene-wrap .detail-overlay.open { display: flex; }
+.scene-wrap .detail-card { position: relative; display: flex; gap: 1.4rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: 12px; padding: 1.4rem 1.6rem; max-width: min(88%, 34rem); box-shadow: 0 24px 60px rgba(0,0,0,0.35); animation: lib-bookfly 0.45s cubic-bezier(0.2, 0.8, 0.25, 1); }
+@keyframes lib-bookfly { from { transform: scale(0.12) rotate(-84deg); opacity: 0; } 60% { opacity: 1; } to { transform: scale(1) rotate(0); opacity: 1; } }
+.scene-wrap .detail-cover { flex: 0 0 108px; height: 160px; border-radius: 4px; overflow: hidden; display: flex; align-items: flex-end; padding: 0; font-family: var(--display); font-weight: 800; font-size: 0.8rem; line-height: 1.15; color: #fff; box-shadow: inset -6px 0 12px rgba(0,0,0,0.25), 0 6px 16px rgba(0,0,0,0.25); }
+.scene-wrap .detail-cover img { width: 100%; height: 100%; object-fit: cover; display: block; margin: 0; border: none; padding: 0; }
+.scene-wrap .detail-info h3 { font-family: var(--display); font-size: 1.25rem; margin: 0 0 0.1rem; }
+.scene-wrap .detail-info .author { color: var(--muted); font-size: 0.92rem; margin: 0 0 0.6rem; }
+.scene-wrap .detail-status { display: inline-block; font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; border-radius: 4px; padding: 0.12rem 0.55rem; margin-bottom: 0.4rem; }
+.scene-wrap .detail-status.s-reading { background: var(--accent-soft); color: var(--accent); }
+.scene-wrap .detail-status.s-read { background: color-mix(in srgb, var(--status) 18%, transparent); color: var(--status); }
+.scene-wrap .detail-status.s-toread { background: var(--tag-3-bg); color: var(--tag-3); }
+.scene-wrap .detail-info .dates { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); margin: 0 0 0.5rem; }
+.scene-wrap .detail-info .blurb { font-size: 0.88rem; margin: 0; }
+.scene-wrap .detail-close { position: absolute; top: -2.4rem; right: 0; font-family: var(--mono); font-size: 0.78rem; background: var(--bg-raised); color: var(--muted); border: 1px solid var(--border); border-radius: 6px; padding: 0.25rem 0.7rem; cursor: pointer; }
+
+.scene-legend { display: flex; gap: 0.6rem; flex-wrap: wrap; padding: 0.8rem 1rem; border-top: 1px solid var(--border); background: var(--bg-raised); }
+.legend-chip { font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.04em; border: 1px solid var(--border); border-radius: 99px; padding: 0.18rem 0.85rem; background: var(--bg); color: var(--muted); cursor: pointer; display: inline-flex; align-items: center; gap: 0.45em; }
+.legend-chip .dot { width: 0.6em; height: 0.6em; border-radius: 50%; display: inline-block; }
+.legend-chip .dot-read { background: var(--status); }
+.legend-chip .dot-reading { background: var(--accent); }
+.legend-chip .dot-toread { background: var(--tag-3); }
+.legend-chip:hover { border-color: var(--accent); color: var(--fg); }
+
+@media (max-width: 720px) {
+  .scene-wrap .glass, .scene-wrap .chairs { display: none; }
+  .scene-wrap .tower { transform: scale(0.82); transform-origin: 50% 100%; }
+}
+</style>
+
+<script is:inline>
+(function () {
+  var BOOKS = JSON.parse(document.getElementById('library-data').textContent);
+
+  function pr(i, s) { var x = Math.sin(i * 127.1 + s * 311.7) * 43758.5453; return x - Math.floor(x); }
+  var palette = ['#c0392b', '#d35400', '#e67e22', '#b5651d', '#8e5a2a', '#a04000', '#7d3c98', '#1f618d', '#117a65', '#935116', '#cd6155', '#d4ac0d', '#6e2c00', '#283747', '#7b7d7d'];
+  var spineColor = function (title) {
+    var h = 0;
+    for (var i = 0; i < title.length; i++) h = (h * 31 + title.charCodeAt(i)) >>> 0;
+    return palette[h % 7]; // warm-leaning slice for real books
+  };
+
+  var seed = 0;
+  function fillFace(face, W) {
+    var H = 415, rowH = 12.2, parts = [];
+    for (var y = rowH; y < H - 4; y += rowH) {
+      parts.push('<rect x="0" y="' + y.toFixed(1) + '" width="' + W + '" height="1.6" fill="#5a3a18" opacity="0.9"/>');
+      var x = 2 + pr(++seed, 1) * 3;
+      while (x < W - 4) {
+        seed++;
+        var bw = 2.2 + pr(seed, 2) * 2.6, bh = 7.5 + pr(seed, 3) * 3.4;
+        if (pr(seed, 4) > 0.07) {
+          parts.push('<rect x="' + x.toFixed(1) + '" y="' + (y - bh).toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + bh.toFixed(1) + '" fill="' + palette[Math.floor(pr(seed, 5) * palette.length)] + '"/>');
+        }
+        x += bw + 0.7;
+      }
+    }
+    face.insertAdjacentHTML('afterbegin', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' 415" preserveAspectRatio="none">' + parts.join('') + '</svg>');
+  }
+  fillFace(document.querySelector('.face-front'), 330);
+  fillFace(document.querySelector('.face-left'), 118);
+  fillFace(document.querySelector('.face-right'), 118);
+
+  ['read', 'reading', 'toread'].forEach(function (st) {
+    var n = BOOKS.filter(function (b) { return b.status === st; }).length;
+    document.querySelector('[data-count="' + st + '"]').textContent = n ? n + (n === 1 ? ' BOOK' : ' BOOKS') : 'EMPTY';
+  });
+
+  // ---- parallax look-around (mouse + touch drag) ----
+  var viewport = document.getElementById('viewport');
+  var tower = document.getElementById('tower');
+  var layerBack = document.getElementById('layerBack');
+  var layerMid = document.getElementById('layerMid');
+  var layerLife = document.getElementById('layerLife');
+  var targetRY = 0, curRY = 0, targetPX = 0, curPX = 0, zoomed = false;
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function look(frac) { // frac in [-0.5, 0.5]
+    targetRY = frac * 14;
+    targetPX = -frac * 30;
+  }
+  viewport.addEventListener('mousemove', function (e) {
+    if (zoomed) return;
+    var r = viewport.getBoundingClientRect();
+    look((e.clientX - r.left) / r.width - 0.5);
+  });
+  var touchX = null, touchFrac = 0;
+  viewport.addEventListener('touchstart', function (e) { touchX = e.touches[0].clientX; }, { passive: true });
+  viewport.addEventListener('touchmove', function (e) {
+    if (zoomed || touchX === null) return;
+    var r = viewport.getBoundingClientRect();
+    touchFrac = Math.max(-0.5, Math.min(0.5, touchFrac + (e.touches[0].clientX - touchX) / r.width));
+    touchX = e.touches[0].clientX;
+    look(touchFrac);
+  }, { passive: true });
+  (function tick() {
+    var k = reduced ? 1 : 0.07;
+    curRY += (targetRY - curRY) * k;
+    curPX += (targetPX - curPX) * k;
+    if (!zoomed) tower.style.transform = 'rotateY(' + curRY.toFixed(2) + 'deg)';
+    layerBack.style.transform = 'translateX(' + (curPX * 0.4).toFixed(1) + 'px)';
+    layerMid.style.transform = 'translateX(' + (curPX * 0.7).toFixed(1) + 'px)';
+    layerLife.style.transform = 'translateX(' + (curPX * 1.0).toFixed(1) + 'px)';
+    requestAnimationFrame(tick);
+  })();
+
+  // ---- step-closer view ----
+  var closeup = document.getElementById('closeup');
+  var closeupWord = document.getElementById('closeupWord');
+  var closeupShelf = document.getElementById('closeupShelf');
+  var words = { read: 'READ', reading: 'READING NOW', toread: 'TO READ' };
+  function openCloseup(status) {
+    zoomed = true;
+    tower.classList.add('zoomed');
+    viewport.classList.add('dimmed');
+    closeupWord.textContent = words[status];
+    closeupShelf.innerHTML = '';
+    var books = BOOKS.filter(function (b) { return b.status === status; });
+    if (!books.length) {
+      closeupShelf.innerHTML = '<span class="empty-hint">nothing on this shelf yet</span>';
+    }
+    books.forEach(function (b) {
+      var bk = document.createElement('button');
+      bk.className = 'bigbook ' + b.status;
+      bk.setAttribute('aria-label', b.title + ' by ' + b.author);
+      if (b.status !== 'toread') {
+        var c = spineColor(b.title);
+        bk.style.background = 'linear-gradient(90deg, ' + c + ', color-mix(in srgb, ' + c + ' 65%, #000))';
+      }
+      bk.innerHTML = '<span class="bt"></span><span class="bb"></span>';
+      bk.addEventListener('click', function () { openBook(b); });
+      closeupShelf.appendChild(bk);
+    });
+    setTimeout(function () { closeup.classList.add('open'); }, reduced ? 0 : 280);
+  }
+  function closeCloseup() {
+    zoomed = false;
+    closeup.classList.remove('open');
+    tower.classList.remove('zoomed');
+    viewport.classList.remove('dimmed');
+    if (location.hash) history.replaceState(null, '', location.pathname);
+  }
+  document.querySelectorAll('.face').forEach(function (f) {
+    f.addEventListener('click', function () { openCloseup(f.getAttribute('data-status')); });
+    f.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCloseup(f.getAttribute('data-status')); } });
+  });
+  document.getElementById('closeupBack').addEventListener('click', closeCloseup);
+  document.getElementById('legend').addEventListener('click', function (e) {
+    var chip = e.target.closest('.legend-chip');
+    if (chip) openCloseup(chip.getAttribute('data-status'));
+  });
+
+  // ---- detail card ----
+  var overlay = document.getElementById('overlay');
+  var labels = { reading: 'Reading now', read: 'Read', toread: 'To read' };
+  function openBook(b) {
+    document.getElementById('dTitle').textContent = b.title;
+    document.getElementById('dAuthor').textContent = b.author;
+    document.getElementById('dBlurb').textContent = b.note;
+    var st = document.getElementById('dStatus');
+    st.textContent = labels[b.status];
+    st.className = 'detail-status s-' + b.status;
+    var dates = document.getElementById('dDates');
+    dates.textContent = [b.started ? 'started ' + b.started : null, b.finished ? 'finished ' + b.finished : null].filter(Boolean).join(' · ');
+    var cov = document.getElementById('dCover');
+    if (b.cover) {
+      cov.style.background = 'none';
+      cov.innerHTML = '<img src="' + b.cover + '" alt="Cover of ' + b.title.replace(/"/g, '&quot;') + '">';
+    } else {
+      var c = spineColor(b.title);
+      cov.style.background = 'linear-gradient(160deg, ' + c + ', color-mix(in srgb, ' + c + ' 60%, #000))';
+      cov.innerHTML = '<span style="padding:0.55rem; text-shadow:0 1px 3px rgba(0,0,0,0.4)">' + b.title + '</span>';
+    }
+    overlay.classList.add('open');
+    history.replaceState(null, '', '#' + b.id);
+  }
+  document.getElementById('dClose').addEventListener('click', function () { overlay.classList.remove('open'); });
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('open'); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (overlay.classList.contains('open')) overlay.classList.remove('open');
+    else if (closeup.classList.contains('open')) closeCloseup();
+  });
+
+  // ---- deep link: /library#slug opens that book's shelf and card ----
+  var slug = location.hash.replace('#', '');
+  if (slug) {
+    var hit = BOOKS.find(function (b) { return b.id === slug; });
+    if (hit) { openCloseup(hit.status); setTimeout(function () { openBook(hit); }, reduced ? 0 : 500); }
+  }
+})();
+</script>
