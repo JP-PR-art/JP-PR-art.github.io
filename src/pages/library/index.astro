@@ -21,10 +21,10 @@ const books = entries
   <h1>Library</h1>
   <p>A replica of the Starfield Library tower in Seoul. Its three faces are my three shelves:
   <strong>read</strong> on the left, <strong>reading now</strong> in front, <strong>to read</strong> on the right.
-  Move the mouse to look around, click a face to step closer, click a book to open it.</p>
+  Scroll to zoom in, drag to rotate it, click a face to step closer, click a book to open it.</p>
 
   <div class="scene-wrap" id="sceneWrap">
-    <span class="scene-hint">move mouse to look · click a tower face to step closer</span>
+    <span class="scene-hint">scroll to zoom · drag to rotate · click a face to step closer</span>
     <div class="scene-viewport" id="viewport">
       <div class="layer" id="layerBack">
         <div class="glow"></div>
@@ -98,7 +98,10 @@ const books = entries
 
 /* the tower */
 .scene-wrap .atrium { position: absolute; inset: 0; perspective: 1500px; perspective-origin: 50% 42%; z-index: 5; }
-.scene-wrap .tower { position: absolute; left: 50%; bottom: 112px; width: 330px; height: 415px; margin-left: -165px; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.3,0.7,0.3,1); will-change: transform; }
+.scene-wrap .tower { position: absolute; left: 50%; bottom: 112px; width: 330px; height: 415px; margin-left: -165px; transform-style: preserve-3d; transform-origin: 50% 68%; will-change: transform; }
+.scene-wrap .tower.zooming-out { transition: transform 0.6s cubic-bezier(0.3,0.7,0.3,1); }
+.scene-viewport { cursor: grab; }
+.scene-viewport.dragging { cursor: grabbing; }
 .scene-wrap .face { position: absolute; top: 0; height: 100%; overflow: hidden; cursor: pointer; background: linear-gradient(180deg, #b07a42, #9a662f 30%, #8a5826 70%, #7a4c20); }
 .scene-wrap .face svg { display: block; width: 100%; height: 100%; }
 .scene-wrap .face::after { content: ""; position: absolute; inset: 0;
@@ -120,7 +123,7 @@ const books = entries
 .scene-wrap .tower-sign { position: absolute; top: 26px; left: 0; right: 0; text-align: center; z-index: 4; pointer-events: none; }
 .scene-wrap .tower-sign .kr { font-family: var(--display); font-weight: 800; font-size: 21px; letter-spacing: 0.12em; color: #ffe9c4; text-shadow: 0 0 14px rgba(255,190,90,1), 0 0 34px rgba(255,150,50,0.75); }
 .scene-wrap .tower-sign .en { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.42em; text-indent: 0.42em; color: #ffdba8; opacity: 0.9; text-shadow: 0 0 8px rgba(255,170,70,0.9); margin-top: 2px; }
-.scene-wrap .tower.zoomed { transform: scale(2.35) translateY(9%); }
+.scene-wrap .tower.zoomed { transition: transform 0.6s cubic-bezier(0.3,0.7,0.3,1); transform: scale(2.35) translateY(9%); }
 .scene-viewport.dimmed .layer { filter: brightness(0.55) saturate(0.8); transition: filter 0.5s ease; }
 
 /* close-up shelf: face-out books, covers forward */
@@ -186,19 +189,39 @@ const books = entries
   };
   function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
 
+  // Shelf rows of face-out book fronts (covers with a title band), with
+  // occasional spine clusters and gaps for a real-bookshop texture.
   var seed = 0;
   function fillFace(face, W) {
-    var H = 415, rowH = 12.2, parts = [];
-    for (var y = rowH; y < H - 4; y += rowH) {
-      parts.push('<rect x="0" y="' + y.toFixed(1) + '" width="' + W + '" height="1.6" fill="#5a3a18" opacity="0.9"/>');
-      var x = 2 + pr(++seed, 1) * 3;
-      while (x < W - 4) {
+    var H = 415, rowH = 25.5, parts = [];
+    for (var y = rowH; y < H - 6; y += rowH) {
+      parts.push('<rect x="0" y="' + y.toFixed(1) + '" width="' + W + '" height="3" fill="#5a3a18"/>');
+      parts.push('<rect x="0" y="' + (y + 3).toFixed(1) + '" width="' + W + '" height="1.4" fill="#2e1c0a" opacity="0.6"/>');
+      var x = 3 + pr(++seed, 1) * 5;
+      while (x < W - 8) {
         seed++;
-        var bw = 2.2 + pr(seed, 2) * 2.6, bh = 7.5 + pr(seed, 3) * 3.4;
-        if (pr(seed, 4) > 0.07) {
-          parts.push('<rect x="' + x.toFixed(1) + '" y="' + (y - bh).toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + bh.toFixed(1) + '" fill="' + palette[Math.floor(pr(seed, 5) * palette.length)] + '"/>');
+        var r = pr(seed, 6);
+        if (r < 0.7) {
+          // face-out cover: colored front with a light title band and a faint footer
+          var bw = 8.5 + pr(seed, 2) * 4.5, bh = 16.5 + pr(seed, 3) * 4.5;
+          var col = palette[Math.floor(pr(seed, 5) * palette.length)];
+          parts.push('<rect x="' + x.toFixed(1) + '" y="' + (y - bh).toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + bh.toFixed(1) + '" rx="0.8" fill="' + col + '"/>');
+          parts.push('<rect x="' + (x + 1.6).toFixed(1) + '" y="' + (y - bh + 2.4).toFixed(1) + '" width="' + (bw - 3.2).toFixed(1) + '" height="2.4" fill="#ffffff" opacity="0.55"/>');
+          parts.push('<rect x="' + (x + 1.6).toFixed(1) + '" y="' + (y - 4.6).toFixed(1) + '" width="' + (bw - 3.2).toFixed(1) + '" height="1.6" fill="#000000" opacity="0.25"/>');
+          x += bw + 1.8;
+        } else if (r < 0.93) {
+          // spine cluster between the displays
+          var n = 2 + Math.floor(pr(seed, 7) * 4);
+          for (var k = 0; k < n && x < W - 6; k++) {
+            seed++;
+            var sw = 2.4 + pr(seed, 2) * 1.8, sh = 17 + pr(seed, 3) * 4;
+            parts.push('<rect x="' + x.toFixed(1) + '" y="' + (y - sh).toFixed(1) + '" width="' + sw.toFixed(1) + '" height="' + sh.toFixed(1) + '" fill="' + palette[Math.floor(pr(seed, 5) * palette.length)] + '"/>');
+            x += sw + 0.7;
+          }
+          x += 1.4;
+        } else {
+          x += 6 + pr(seed, 8) * 10;
         }
-        x += bw + 0.7;
       }
     }
     face.insertAdjacentHTML('afterbegin', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' 415" preserveAspectRatio="none">' + parts.join('') + '</svg>');
@@ -212,35 +235,46 @@ const books = entries
     document.querySelector('[data-count="' + st + '"]').textContent = n ? n + (n === 1 ? ' BOOK' : ' BOOKS') : 'EMPTY';
   });
 
-  // ---- parallax look-around (mouse + touch drag) ----
+  // ---- camera: hover look, drag to rotate, wheel to zoom ----
   var viewport = document.getElementById('viewport');
   var tower = document.getElementById('tower');
   var layerBack = document.getElementById('layerBack');
-  var targetRY = 0, curRY = 0, targetPX = 0, curPX = 0, zoomed = false;
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function look(frac) { // frac in [-0.5, 0.5]
-    targetRY = frac * 14;
-    targetPX = -frac * 24;
-  }
+  var hoverRot = 0, dragRot = 0, targetZoom = 1;
+  var curRot = 0, curZoom = 1, curPX = 0, zoomed = false;
+  var dragging = false, dragDist = 0, lastX = 0;
+
   viewport.addEventListener('mousemove', function (e) {
-    if (zoomed) return;
+    if (zoomed || dragging) return;
     var r = viewport.getBoundingClientRect();
-    look((e.clientX - r.left) / r.width - 0.5);
+    hoverRot = ((e.clientX - r.left) / r.width - 0.5) * 16;
   });
-  var touchX = null, touchFrac = 0;
-  viewport.addEventListener('touchstart', function (e) { touchX = e.touches[0].clientX; }, { passive: true });
-  viewport.addEventListener('touchmove', function (e) {
-    if (zoomed || touchX === null) return;
-    var r = viewport.getBoundingClientRect();
-    touchFrac = Math.max(-0.5, Math.min(0.5, touchFrac + (e.touches[0].clientX - touchX) / r.width));
-    touchX = e.touches[0].clientX;
-    look(touchFrac);
-  }, { passive: true });
+  function dragStart(x) { dragging = true; dragDist = 0; lastX = x; viewport.classList.add('dragging'); }
+  function dragMove(x) {
+    if (!dragging) return;
+    var dx = x - lastX; lastX = x; dragDist += Math.abs(dx);
+    dragRot = Math.max(-58, Math.min(58, dragRot + dx * 0.35));
+  }
+  function dragEnd() { dragging = false; viewport.classList.remove('dragging'); }
+  viewport.addEventListener('mousedown', function (e) { if (!zoomed) dragStart(e.clientX); });
+  window.addEventListener('mousemove', function (e) { dragMove(e.clientX); });
+  window.addEventListener('mouseup', dragEnd);
+  viewport.addEventListener('touchstart', function (e) { if (!zoomed) dragStart(e.touches[0].clientX); }, { passive: true });
+  viewport.addEventListener('touchmove', function (e) { dragMove(e.touches[0].clientX); }, { passive: true });
+  viewport.addEventListener('touchend', dragEnd);
+  viewport.addEventListener('wheel', function (e) {
+    if (zoomed) return;
+    e.preventDefault();
+    targetZoom = Math.max(1, Math.min(2.6, targetZoom - e.deltaY * 0.0016));
+  }, { passive: false });
+
   (function tick() {
-    var k = reduced ? 1 : 0.07;
-    curRY += (targetRY - curRY) * k;
-    curPX += (targetPX - curPX) * k;
-    if (!zoomed) tower.style.transform = 'rotateY(' + curRY.toFixed(2) + 'deg)';
+    var k = reduced ? 1 : 0.09;
+    var targetRot = dragRot + hoverRot * 0.4;
+    curRot += (targetRot - curRot) * k;
+    curZoom += (targetZoom - curZoom) * k;
+    curPX += (-targetRot * 1.2 - curPX) * k;
+    if (!zoomed) tower.style.transform = 'scale(' + curZoom.toFixed(3) + ') rotateY(' + curRot.toFixed(2) + 'deg)';
     layerBack.style.transform = 'translateX(' + (curPX * 0.5).toFixed(1) + 'px)';
     requestAnimationFrame(tick);
   })();
@@ -252,6 +286,7 @@ const books = entries
   var words = { read: 'READ', reading: 'READING NOW', toread: 'TO READ' };
   function openCloseup(status) {
     zoomed = true;
+    tower.style.transform = ''; // let the .zoomed class transition take over
     tower.classList.add('zoomed');
     viewport.classList.add('dimmed');
     closeupWord.textContent = words[status];
@@ -285,7 +320,7 @@ const books = entries
     if (location.hash) history.replaceState(null, '', location.pathname);
   }
   document.querySelectorAll('.face').forEach(function (f) {
-    f.addEventListener('click', function () { openCloseup(f.getAttribute('data-status')); });
+    f.addEventListener('click', function () { if (dragDist < 8) openCloseup(f.getAttribute('data-status')); });
     f.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCloseup(f.getAttribute('data-status')); } });
   });
   document.getElementById('closeupBack').addEventListener('click', closeCloseup);
