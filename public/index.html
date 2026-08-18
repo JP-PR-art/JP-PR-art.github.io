@@ -875,6 +875,8 @@
   .wcell.off:hover { border-color: var(--line); }
   .wcell.conflict { border-color: #b23a2e; background: rgba(178,58,46,0.10); }
   .wcell.conflict .wcrane { color: #b23a2e; font-weight: 700; }
+  .case-shot { margin: 1.2rem 0 0; }
+  .case-shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 10px; }
   .wbanner { margin-top: 0.9rem; display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; }
   .wtoast { font: 600 0.72rem/1 var(--mono); color: #2f7a4d; }
   [data-theme="dark"] .wtoast { color: #6fca8f; }
@@ -1451,6 +1453,7 @@
               <p class="demo__hint">Click a cell to reassign its crane. A crane double-booked on one day is flagged instantly. Anonymized: real crews and sites stay in a private repo.</p>
             </div>
           </div>
+          <figure class="case-shot"><img src="/images/builds/werf-crew-planner.png" alt="WERF weekly crew planner, anonymized reference: a crew-by-weekday grid of placeholder sites with one flagged conflict" loading="lazy"></figure>
         </div>
       </article>
 
