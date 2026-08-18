@@ -76,7 +76,18 @@
 
   body {
     margin: 0;
-    background: var(--bg);
+    /* drafting-paper background: a blueprint grid in the site's accent.
+       Minor cell 26px, major line every 5th cell, soft indigo wash up top. */
+    --grid-minor: color-mix(in srgb, var(--accent) 6%, transparent);
+    --grid-major: color-mix(in srgb, var(--accent) 12%, transparent);
+    background:
+      radial-gradient(1100px 520px at 50% -160px, color-mix(in srgb, var(--accent) 7%, transparent), transparent 70%),
+      linear-gradient(90deg, var(--grid-major) 0 1px, transparent 1px),
+      linear-gradient(0deg, var(--grid-major) 0 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-minor) 0 1px, transparent 1px),
+      linear-gradient(0deg, var(--grid-minor) 0 1px, transparent 1px),
+      var(--bg);
+    background-size: auto, 130px 130px, 130px 130px, 26px 26px, 26px 26px, auto;
     color: var(--ink);
     font-family: var(--sans);
     font-size: 1.0625rem;
@@ -875,6 +886,8 @@
   .wcell.off:hover { border-color: var(--line); }
   .wcell.conflict { border-color: #b23a2e; background: rgba(178,58,46,0.10); }
   .wcell.conflict .wcrane { color: #b23a2e; font-weight: 700; }
+  .case-shot { margin: 1.2rem 0 0; }
+  .case-shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 10px; }
   .wbanner { margin-top: 0.9rem; display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; }
   .wtoast { font: 600 0.72rem/1 var(--mono); color: #2f7a4d; }
   [data-theme="dark"] .wtoast { color: #6fca8f; }
@@ -1180,6 +1193,7 @@
       <a href="#clients">Clients</a>
       <a href="#work">Work</a>
       <a href="#profile">Profile</a>
+      <a href="/library">Library</a>
       <a href="#contact">Contact</a>
     </nav>
     <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch color theme">
@@ -1450,6 +1464,7 @@
               <p class="demo__hint">Click a cell to reassign its crane. A crane double-booked on one day is flagged instantly. Anonymized: real crews and sites stay in a private repo.</p>
             </div>
           </div>
+          <figure class="case-shot"><img src="/images/builds/werf-crew-planner.png" alt="WERF weekly crew planner, anonymized reference: a crew-by-weekday grid of placeholder sites with one flagged conflict" loading="lazy"></figure>
         </div>
       </article>
 
