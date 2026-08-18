@@ -1297,6 +1297,13 @@
 @media (max-width: 720px) {
   .scene-wrap .tower { transform: scale(0.82); transform-origin: 50% 100%; }
 }
+  
+  /* homepage integration: frameless scene, tower sits directly on the page background */
+  #library .scene-wrap { border: none; border-radius: 0; background: transparent; }
+  #library .scene-viewport { background: transparent; }
+  #library .scene-wrap .ground { display: none; }
+  #library .scene-legend { background: transparent; border-top: none; justify-content: center; }
+  
   </style>
 </head>
 <body>
