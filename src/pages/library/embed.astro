@@ -1,0 +1,22 @@
+---
+// Bare scene for embedding in the homepage iframe: no site chrome.
+import '../../styles/global.css';
+import LibraryScene from '../../components/LibraryScene.astro';
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Library scene</title>
+    <meta name="robots" content="noindex" />
+    <style>
+      body { margin: 0; padding: 0; }
+      .scene-wrap { margin: 0 !important; border: none !important; border-radius: 0 !important; }
+      .scene-viewport { height: 100vh !important; }
+      .scene-legend { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <LibraryScene />
+  </body>
+</html>
