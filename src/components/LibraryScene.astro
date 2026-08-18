@@ -16,7 +16,7 @@ const books = entries
   .sort((a, b) => (b.started ?? '').localeCompare(a.started ?? ''));
 ---
 <div class="scene-wrap" id="sceneWrap">
-    <span class="scene-hint">scroll to zoom · drag to rotate · click a face to step closer</span>
+    <span class="scene-hint">click the library to explore it</span>
     <div class="scene-viewport" id="viewport">
       <div class="layer" id="layerBack">
         <div class="glow"></div>
@@ -90,7 +90,9 @@ const books = entries
 .scene-wrap .atrium { position: absolute; inset: 0; perspective: 1500px; perspective-origin: 50% 42%; z-index: 5; }
 .scene-wrap .tower { position: absolute; left: 50%; bottom: 112px; width: 330px; height: 415px; margin-left: -165px; transform-style: preserve-3d; transform-origin: 50% 68%; will-change: transform; }
 .scene-wrap .tower.zooming-out { transition: transform 0.6s cubic-bezier(0.3,0.7,0.3,1); }
-.scene-viewport { cursor: grab; }
+.scene-viewport { cursor: pointer; }
+.scene-viewport.interactive { cursor: grab; }
+.scene-hint.on { border-color: var(--accent); color: var(--accent); }
 .scene-viewport.dragging { cursor: grabbing; }
 .scene-wrap .face { position: absolute; top: 0; height: 100%; overflow: hidden; cursor: pointer; background: linear-gradient(180deg, #b07a42, #9a662f 30%, #8a5826 70%, #7a4c20); }
 .scene-wrap .face svg { display: block; width: 100%; height: 100%; }
@@ -278,8 +280,20 @@ const books = entries
   var tower = document.getElementById('tower');
   var layerBack = document.getElementById('layerBack');
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var hoverRot = 0, dragRot = 0, targetZoom = 1;
-  var curRot = 0, curZoom = 1, curPX = 0, zoomed = false;
+  var hoverRot = 0, dragRot = 0, targetZoom = 0.8;
+  var curRot = 0, curZoom = 0.8, curPX = 0, zoomed = false;
+  var active = false;
+  var hintEl = viewport.parentElement.querySelector('.scene-hint');
+  function setActive(on) {
+    active = on;
+    viewport.classList.toggle('interactive', on);
+    if (hintEl) {
+      hintEl.textContent = on ? 'scroll to zoom \u00b7 drag to rotate \u00b7 click a face to step closer \u00b7 click outside to release' : 'click the library to explore it';
+      hintEl.classList.toggle('on', on);
+    }
+  }
+  viewport.addEventListener('click', function () { if (!active) setActive(true); });
+  document.addEventListener('click', function (e) { if (active && !viewport.contains(e.target) && !e.target.closest('.scene-legend')) setActive(false); });
   var dragging = false, dragDist = 0, lastX = 0;
 
   viewport.addEventListener('mousemove', function (e) {
@@ -294,16 +308,16 @@ const books = entries
     dragRot = Math.max(-58, Math.min(58, dragRot + dx * 0.35));
   }
   function dragEnd() { dragging = false; viewport.classList.remove('dragging'); }
-  viewport.addEventListener('mousedown', function (e) { if (!zoomed) dragStart(e.clientX); });
+  viewport.addEventListener('mousedown', function (e) { if (!zoomed && active) dragStart(e.clientX); });
   window.addEventListener('mousemove', function (e) { dragMove(e.clientX); });
   window.addEventListener('mouseup', dragEnd);
-  viewport.addEventListener('touchstart', function (e) { if (!zoomed) dragStart(e.touches[0].clientX); }, { passive: true });
+  viewport.addEventListener('touchstart', function (e) { if (!zoomed && active) dragStart(e.touches[0].clientX); }, { passive: true });
   viewport.addEventListener('touchmove', function (e) { dragMove(e.touches[0].clientX); }, { passive: true });
   viewport.addEventListener('touchend', dragEnd);
   viewport.addEventListener('wheel', function (e) {
-    if (zoomed) return;
+    if (zoomed || !active) return;
     e.preventDefault();
-    targetZoom = Math.max(1, Math.min(2.6, targetZoom - e.deltaY * 0.0016));
+    targetZoom = Math.max(0.7, Math.min(2.6, targetZoom - e.deltaY * 0.0016));
   }, { passive: false });
 
   (function tick() {
@@ -358,7 +372,7 @@ const books = entries
     if (location.hash) history.replaceState(null, '', location.pathname);
   }
   document.querySelectorAll('.face').forEach(function (f) {
-    f.addEventListener('click', function () { if (dragDist < 8) openCloseup(f.getAttribute('data-status')); });
+    f.addEventListener('click', function () { if (active && dragDist < 8) openCloseup(f.getAttribute('data-status')); });
     f.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCloseup(f.getAttribute('data-status')); } });
   });
   document.getElementById('closeupBack').addEventListener('click', closeCloseup);
@@ -397,6 +411,7 @@ const books = entries
     if (e.key !== 'Escape') return;
     if (overlay.classList.contains('open')) overlay.classList.remove('open');
     else if (closeup.classList.contains('open')) closeCloseup();
+    else if (active) setActive(false);
   });
 
   // ---- deep link: /library#slug opens that book's shelf and card ----
